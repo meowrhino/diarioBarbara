@@ -1,0 +1,82 @@
+{
+  "videos": [
+    {
+      "id": "001",
+      "title": "Hola, soy Barbara",
+      "description": "Mi primer video. Estoy nerviosa pero aqui estoy. Este es el comienzo de algo nuevo.",
+      "chapter": 1,
+      "date": "2026-03-31",
+      "duration": "2:34",
+      "file": "videos/001-hola-soy-barbara.webm",
+      "thumbnail": "videos/thumbnails/001.jpg",
+      "tags": ["intro", "primer-video"],
+      "note": "No puedo creer que estoy haciendo esto..."
+    },
+    {
+      "id": "002",
+      "title": "Lo que me da miedo de internet",
+      "description": "Hablando de por que me da verguenza salir en video y por que decidi hacerlo de todas formas.",
+      "chapter": 2,
+      "date": "2026-04-07",
+      "duration": "4:12",
+      "file": "videos/002-lo-que-me-da-miedo.webm",
+      "thumbnail": "videos/thumbnails/002.jpg",
+      "tags": ["personal", "reflexion"],
+      "note": "Grabe esto como 5 veces antes de dejarlo asi"
+    },
+    {
+      "id": "003",
+      "title": "Mi primer tour por mi cuarto",
+      "description": "Les enseno donde grabo todos estos videos. Spoiler: es un desastre bonito.",
+      "chapter": 3,
+      "date": "2026-04-14",
+      "duration": "3:45",
+      "file": "videos/003-tour-cuarto.webm",
+      "thumbnail": "videos/thumbnails/003.jpg",
+      "tags": ["tour", "lifestyle"],
+      "note": "Limpie como loca antes de grabar jaja"
+    },
+    {
+      "id": "004",
+      "title": "Cocinando sin saber cocinar",
+      "description": "Intente hacer galletas por primera vez en camara. No salio exactamente como el tutorial...",
+      "chapter": 4,
+      "date": "2026-04-21",
+      "duration": "6:20",
+      "file": "videos/004-cocinando.webm",
+      "thumbnail": "videos/thumbnails/004.jpg",
+      "tags": ["cocina", "fail", "divertido"],
+      "note": "Las galletas estaban... comibles"
+    },
+    {
+      "id": "005",
+      "title": "Respondiendo preguntas que nadie me hizo",
+      "description": "Como nadie me ha preguntado nada todavia, me invente mis propias preguntas. Improvise y creo que se nota.",
+      "chapter": 5,
+      "date": "2026-04-28",
+      "duration": "5:08",
+      "file": "videos/005-preguntas.webm",
+      "thumbnail": "videos/thumbnails/005.jpg",
+      "tags": ["q-and-a", "divertido"],
+      "note": "Esto fue mas divertido de lo que esperaba"
+    },
+    {
+      "id": "006",
+      "title": "Un dia normal en mi vida",
+      "description": "Lleve la camara conmigo todo el dia. Es raro grabarse haciendo cosas normales pero tambien es bonito.",
+      "chapter": 6,
+      "date": "2026-05-05",
+      "duration": "7:30",
+      "file": "videos/006-dia-normal.webm",
+      "thumbnail": "videos/thumbnails/006.jpg",
+      "tags": ["vlog", "lifestyle"],
+      "note": "Cada vez me da menos pena, creo?"
+    }
+  ],
+  "site": {
+    "title": "Diario de Barbara",
+    "subtitle": "Perdiendo la verguenza, un video a la vez",
+    "author": "Barbara",
+    "started": "2026-03-31"
+  }
+}

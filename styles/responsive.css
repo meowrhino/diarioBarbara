@@ -1,0 +1,68 @@
+/* ============================================
+   RESPONSIVE — Mobile-first breakpoints
+   ============================================ */
+
+/* ── Small screens (phones) ── */
+@media (max-width: 480px) {
+  .container {
+    padding: 0 var(--space-md);
+  }
+
+  .header-inner {
+    flex-direction: column;
+    gap: var(--space-sm);
+    text-align: center;
+  }
+
+  .site-nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--space-xs);
+  }
+
+  .site-nav a {
+    font-size: 0.85rem;
+  }
+
+  .video-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
+  }
+
+  .hero {
+    padding: var(--space-xl) 0;
+  }
+
+  .theme-switcher {
+    bottom: var(--space-md);
+    right: var(--space-md);
+  }
+
+  .theme-panel {
+    right: var(--space-md);
+    bottom: 70px;
+    min-width: 180px;
+  }
+}
+
+/* ── Medium screens (tablets) ── */
+@media (min-width: 481px) and (max-width: 768px) {
+  .video-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ── Large screens (desktop) ── */
+@media (min-width: 769px) {
+  .video-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ── Extra large ── */
+@media (min-width: 1200px) {
+  .video-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-xl);
+  }
+}

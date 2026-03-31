@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="icarly-retro">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Diario de Barbara</title>
+  <meta name="description" content="Perdiendo la verguenza, un video a la vez">
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Comic+Neue:wght@400;700&family=VT323&family=Space+Grotesk:wght@400;600;700&family=DM+Sans:wght@400;500;700&family=Space+Mono:wght@400;700&family=Caveat:wght@400;700&family=Lora:ital,wght@0,400;0,700;1,400&family=Courier+Prime&family=Indie+Flower&family=Boogaloo&family=Nunito:wght@400;600;700&family=Patrick+Hand&family=Fira+Code:wght@400;500;700&family=Source+Code+Pro:wght@400;600&family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=Inter:wght@300;400;600;700&family=Source+Serif+4:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;500;700&family=Special+Elite&display=swap" rel="stylesheet">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="styles/variables.css">
+  <link rel="stylesheet" href="styles/main.css">
+  <link rel="stylesheet" href="styles/themes.css">
+  <link rel="stylesheet" href="styles/responsive.css">
+
+  <!-- Favicon -->
+  <link rel="icon" href="favicon.ico">
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="site-logo">Diario de Barbara</a>
+      <div class="rec-indicator">
+        <span class="rec-dot"></span>
+        <span>REC</span>
+      </div>
+      <nav class="site-nav">
+        <a href="index.html">Inicio</a>
+        <a href="about.html">Sobre mi</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Marquee (visible in retro/kawaii themes via JS) -->
+  <div class="marquee" id="marquee">
+    <span class="marquee-content">
+      Bienvenidos al diario de Barbara ~ perdiendo la verguenza un video a la vez ~ nuevo video cada semana ~ gracias por estar aqui ~
+    </span>
+  </div>
+
+  <!-- Main Content -->
+  <main class="container">
+
+    <!-- Hero -->
+    <section class="hero">
+      <h1 class="hero-title">Diario de Barbara</h1>
+      <p class="hero-subtitle">Perdiendo la verguenza, un video a la vez</p>
+      <div class="visitor-counter">
+        Visitantes: <span id="visitor-count">000042</span>
+      </div>
+    </section>
+
+    <!-- Featured Video -->
+    <section class="featured-video" id="featured-video">
+      <div class="featured-video-player">
+        <video controls preload="metadata" poster="" id="featured-player">
+          <source src="" type="video/webm">
+          Tu navegador no soporta video HTML5.
+        </video>
+      </div>
+      <div class="featured-video-info">
+        <h2 id="featured-title"></h2>
+        <p class="video-date" id="featured-date"></p>
+        <p id="featured-description"></p>
+        <p class="video-note" id="featured-note" style="font-style: italic; color: var(--text-muted); margin-top: var(--space-sm);"></p>
+      </div>
+    </section>
+
+    <!-- Videos Section -->
+    <section>
+      <div class="section-header">
+        <h2>Todos los videos</h2>
+        <p>Del mas reciente al primero</p>
+      </div>
+      <div class="video-grid" id="video-grid">
+        <!-- Populated by JS -->
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>Diario de Barbara &copy; 2026</p>
+      <p style="margin-top: var(--space-sm);">
+        Hecho con nervios y un poquito de valentia
+      </p>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="js/themes.js"></script>
+  <script src="js/main.js"></script>
+
+</body>
+</html>
