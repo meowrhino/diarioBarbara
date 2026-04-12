@@ -4,825 +4,1184 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Propuestas v4 — Reproductor + Iconos</title>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=VT323&family=Caveat:wght@400;700&family=Space+Mono:wght@400;700&family=Inter:wght@300;400;600;700;900&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=VT323&family=Caveat:wght@400;700&family=Space+Mono:wght@400;700&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
-    body { font-family: 'Inter', sans-serif; background: #0a0a0a; color: #e0e0e0; overflow-x: hidden; }
+    body { font-family: 'Nunito', sans-serif; background: #0a0a0a; color: #e0e0e0; overflow-x: hidden; }
 
-    /* NAV */
-    .main-nav {
+    /* ── NAV ── */
+    .nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 9999;
-      background: #0a0a0aee; backdrop-filter: blur(10px);
+      background: #0a0a0aee; backdrop-filter: blur(12px);
       border-bottom: 1px solid #1a1a1a;
-      padding: 10px 20px; display: flex; gap: 8px; align-items: center;
-      overflow-x: auto; white-space: nowrap;
+      padding: 9px 18px; display: flex; gap: 8px; align-items: center;
     }
-    .main-nav .label { color: #333; font-family: 'Space Mono'; font-size: 0.58rem; letter-spacing: 3px; text-transform: uppercase; margin-right: 6px; flex-shrink: 0; }
-    .main-nav a {
-      color: #555; text-decoration: none; font-size: 0.72rem; font-family: 'Space Mono';
-      padding: 5px 14px; border-radius: 20px; border: 1px solid #222;
-      transition: all 0.2s; flex-shrink: 0;
+    .nav .label { color: #2a2a2a; font-family: 'Space Mono'; font-size: 0.56rem; letter-spacing: 3px; text-transform: uppercase; margin-right: 4px; }
+    .nav a {
+      color: #444; text-decoration: none; font-size: 0.7rem; font-family: 'Space Mono';
+      padding: 4px 12px; border-radius: 20px; border: 1px solid #1e1e1e;
+      transition: all 0.2s;
     }
-    .main-nav a:hover { color: #fff; border-color: #e91e8c; background: #e91e8c22; }
-    .main-nav a.active { background: #e91e8c; border-color: #e91e8c; color: #fff; }
+    .nav a:hover { color: #fff; border-color: #e91e8c55; }
+    .nav a.active { background: #e91e8c; border-color: #e91e8c; color: #fff; }
 
+    /* ── SHARED SECTION ── */
+    .section { min-height: 100vh; scroll-margin-top: 44px; position: relative; overflow: hidden; }
+    .sec-label {
+      position: absolute; top: 54px; left: 20px; pointer-events: none; z-index: 40;
+      display: flex; flex-direction: column; gap: 2px;
+    }
+    .sec-label .tag { font-family: 'Space Mono'; font-size: 0.55rem; color: #e91e8c66; letter-spacing: 3px; text-transform: uppercase; }
+    .sec-label .name { font-size: 1.15rem; font-weight: 900; color: #ffffff55; }
+    .sec-label .hint { font-family: 'Space Mono'; font-size: 0.55rem; color: #2a2a2a; }
+
+    /* ═════════════════════════════════════════════
+       PROPUESTA A — EL WINAMP
+    ═════════════════════════════════════════════ */
+    #pA {
+      background: radial-gradient(ellipse at 20% 80%, #1a0a2e 0%, #0a0a12 70%);
+      display: flex; align-items: center; justify-content: center;
+      padding: 64px 16px 40px;
+    }
+    #pA::before {
+      content: '';
+      position: absolute; inset: 0;
+      background-image: linear-gradient(#ffffff04 1px, transparent 1px), linear-gradient(90deg, #ffffff04 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+
+    .winamp-shell {
+      width: min(860px, 96vw);
+      background: #181818;
+      border-radius: 10px;
+      border: 1px solid #2a2a2a;
+      box-shadow: 0 0 0 1px #0a0a0a, 0 30px 80px rgba(0,0,0,0.85), inset 0 1px 0 #2e2e2e;
+      overflow: hidden;
+      position: relative;
+      transition: box-shadow 0.5s;
+    }
+    .winamp-shell.playing {
+      box-shadow: 0 0 0 1px #e91e8c44, 0 0 40px #e91e8c22, 0 30px 80px rgba(0,0,0,0.85), inset 0 1px 0 #2e2e2e;
+    }
+
+    .winamp-titlebar {
+      background: linear-gradient(90deg, #c0156a, #5a0a9a);
+      padding: 8px 12px;
+      display: flex; justify-content: space-between; align-items: center;
+      user-select: none; cursor: move;
+    }
+    .win-dot { width: 9px; height: 9px; border-radius: 50%; cursor: pointer; }
+    .win-dot.r { background: #ff5f57; }
+    .win-dot.y { background: #ffbd2e; }
+    .win-dot.g { background: #28c840; }
+
+    .winamp-body { display: flex; }
+
+    .winamp-viz {
+      width: 52px; flex-shrink: 0;
+      background: #050505;
+      border-right: 1px solid #1e1e1e;
+      display: flex; align-items: flex-end; justify-content: center; gap: 2px;
+      padding: 6px 3px; position: relative;
+    }
+    .vu-bar {
+      width: 5px; background: linear-gradient(to top, #e91e8c, #ff69b4);
+      border-radius: 1px 1px 0 0; flex-shrink: 0;
+      transition: height 0.08s ease-out;
+      height: 10%;
+    }
+    .vu-bar.purple { background: linear-gradient(to top, #6a0dad, #a855f7); }
+
+    .winamp-center { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+
+    .winamp-marquee {
+      background: #0a0a0a; padding: 5px 0;
+      border-bottom: 1px solid #181818; overflow: hidden; white-space: nowrap;
+    }
+    .winamp-marquee-inner {
+      display: inline-block;
+      font-family: 'VT323'; font-size: 0.9rem; color: #e91e8c; letter-spacing: 2px;
+      animation: marquee-run 12s linear infinite;
+      padding-left: 100%;
+    }
+    @keyframes marquee-run { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+    .winamp-screen {
+      aspect-ratio: 16/9; background: #000;
+      position: relative; overflow: hidden; cursor: pointer;
+    }
+    .winamp-screen-bg { position: absolute; inset: 0; transition: background 0.7s; }
+    .winamp-screen-art {
+      position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+      z-index: 2;
+    }
+    .winamp-screen-art .art-emoji {
+      font-size: 5rem; filter: drop-shadow(0 0 30px rgba(233,30,140,0.6));
+      transition: all 0.5s;
+    }
+    .winamp-screen-scanlines {
+      position: absolute; inset: 0; z-index: 3; pointer-events: none;
+      background: repeating-linear-gradient(to bottom, transparent, transparent 3px, rgba(0,0,0,0.12) 3px, rgba(0,0,0,0.12) 4px);
+    }
+    .winamp-screen-overlay {
+      position: absolute; inset: 0; z-index: 4; pointer-events: none;
+      background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.6) 100%);
+    }
+    .winamp-time {
+      position: absolute; bottom: 10px; right: 12px; z-index: 5;
+      font-family: 'VT323'; font-size: 1.1rem; color: #e91e8c88; letter-spacing: 2px;
+    }
+    .winamp-screen-play {
+      position: absolute; inset: 0; z-index: 5; display: flex; align-items: center; justify-content: center;
+      font-size: 2.5rem; color: #e91e8c; opacity: 0; transition: opacity 0.3s;
+      text-shadow: 0 0 40px #e91e8c;
+    }
+    .winamp-screen.paused .winamp-screen-play { opacity: 0.8; }
+
+    .winamp-seekrow { padding: 7px 12px; background: #0d0d0d; border-top: 1px solid #111; }
+    .winamp-seekbar-track {
+      height: 5px; background: #1a1a1a; border-radius: 3px; position: relative; cursor: pointer;
+    }
+    .winamp-seekbar-fill {
+      height: 100%; width: 0%; border-radius: 3px;
+      background: linear-gradient(90deg, #e91e8c, #9b30e0);
+      pointer-events: none; transition: width 0.15s linear;
+    }
+    .winamp-seekbar-thumb {
+      position: absolute; top: 50%; width: 11px; height: 11px; border-radius: 50%;
+      background: #e91e8c; transform: translate(-50%, -50%);
+      box-shadow: 0 0 8px #e91e8c88; pointer-events: none; transition: left 0.15s linear;
+    }
+
+    .winamp-controls {
+      padding: 9px 12px; background: #111; border-top: 1px solid #1a1a1a;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .wbtn {
+      background: #1c1c1c; border: 1px solid #2a2a2a; color: #777;
+      border-radius: 5px; padding: 5px 10px; cursor: pointer; font-size: 0.85rem;
+      transition: all 0.15s;
+    }
+    .wbtn:hover { background: #242424; color: #fff; border-color: #333; }
+    .wbtn.primary {
+      background: linear-gradient(135deg, #e91e8c, #6a0dad); border: none;
+      color: #fff; padding: 5px 14px;
+    }
+    .wbtn.primary:hover { opacity: 0.85; }
+
+    .winamp-vol-track {
+      width: 72px; height: 4px; background: #1a1a1a; border-radius: 2px; cursor: pointer; position: relative;
+    }
+    .winamp-vol-fill { height: 100%; width: 75%; background: #e91e8c; border-radius: 2px; pointer-events: none; }
+
+    .winamp-playlist {
+      width: 196px; flex-shrink: 0;
+      background: #0c0c0c; border-left: 1px solid #1a1a1a;
+      display: flex; flex-direction: column;
+    }
+    .wpl-header {
+      padding: 7px 10px; border-bottom: 1px solid #181818;
+      font-family: 'Space Mono'; font-size: 0.52rem; color: #2a2a2a; letter-spacing: 2px; text-transform: uppercase;
+    }
+    .wpl-track {
+      padding: 9px 10px; cursor: pointer; border-bottom: 1px solid #111;
+      border-left: 3px solid transparent; display: flex; gap: 8px; align-items: center;
+      transition: background 0.15s;
+    }
+    .wpl-track:hover { background: #141414; }
+    .wpl-track.active { background: #181818; border-left-color: #e91e8c; }
+    .wpl-thumb {
+      width: 36px; height: 36px; border-radius: 4px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+    }
+    .wpl-info { flex: 1; min-width: 0; }
+    .wpl-title { font-size: 0.75rem; font-weight: 700; color: #aaa; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .wpl-track.active .wpl-title { color: #fff; }
+    .wpl-meta { font-family: 'Space Mono'; font-size: 0.48rem; color: #333; margin-top: 2px; display: flex; justify-content: space-between; }
+    .wpl-track.active .wpl-meta span { color: #e91e8c; }
+
+    /* ═════════════════════════════════════════════
+       PROPUESTA B — EL QUIOSCO
+    ═════════════════════════════════════════════ */
+    #pB { background: #040404; }
+
+    .quiosco-grid {
+      position: absolute; inset: 0; z-index: 10;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 70px 24px 24px;
+      transition: opacity 0.4s, transform 0.4s;
+    }
+    .quiosco-header {
+      width: 100%; max-width: 860px;
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-bottom: 20px;
+    }
+    .quiosco-title { font-size: 2.4rem; font-weight: 900; color: #fff; line-height: 1; }
+    .quiosco-subtitle { font-family: 'Space Mono'; font-size: 0.55rem; color: #333; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 4px; }
+    .quiosco-count { font-family: 'Space Mono'; font-size: 0.55rem; color: #2a2a2a; letter-spacing: 1px; }
+
+    .quiosco-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; width: 100%; max-width: 860px; }
+
+    .q-card {
+      border-radius: 14px; overflow: hidden; cursor: pointer;
+      position: relative; aspect-ratio: 9/13;
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.3s;
+    }
+    .q-card:hover { transform: scale(1.04) translateY(-4px); }
+    .q-card:focus { outline: none; }
+    .q-card-bg { position: absolute; inset: 0; }
+    .q-card-fade { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.2) 55%, transparent 100%); }
+    .q-card-ep {
+      position: absolute; top: 12px; left: 12px;
+      font-family: 'VT323'; font-size: 1rem; color: #ffffff66; letter-spacing: 3px;
+    }
+    .q-card-new {
+      position: absolute; top: 10px; right: 10px;
+      background: #e91e8c; color: #fff; font-family: 'Space Mono'; font-size: 0.45rem;
+      padding: 2px 6px; border-radius: 3px; letter-spacing: 1px; text-transform: uppercase;
+    }
+    .q-card-icon {
+      position: absolute; top: 42%; left: 50%; transform: translate(-50%, -50%);
+      font-size: 3.5rem; transition: transform 0.3s;
+    }
+    .q-card:hover .q-card-icon { transform: translate(-50%, -50%) scale(1.15); }
+    .q-card-bottom { position: absolute; bottom: 0; left: 0; right: 0; padding: 16px 14px; }
+    .q-card-title { font-size: 1rem; font-weight: 900; color: #fff; margin-bottom: 3px; }
+    .q-card-note { font-family: 'Caveat'; font-size: 0.85rem; color: #ffffff77; line-height: 1.4; margin-bottom: 6px; }
+    .q-card-dur { font-family: 'Space Mono'; font-size: 0.5rem; color: #ffffff44; }
+
+    .quiosco-player {
+      position: absolute; inset: 0; z-index: 20;
+      display: flex; flex-direction: column;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.5s;
+    }
+    .q-player-bg { position: absolute; inset: 0; transition: background 0.6s; }
+    .q-player-scanlines {
+      position: absolute; inset: 0; pointer-events: none; z-index: 1;
+      background: repeating-linear-gradient(to bottom, transparent, transparent 3px, rgba(0,0,0,0.07) 3px, rgba(0,0,0,0.07) 4px);
+    }
+    .q-player-vignette {
+      position: absolute; inset: 0; pointer-events: none; z-index: 1;
+      background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.7) 100%);
+    }
+    .q-player-topbar {
+      position: absolute; top: 0; left: 0; right: 0; z-index: 10;
+      padding: 16px 20px;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.75), transparent);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .q-back-btn {
+      background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.15);
+      color: #fff; border-radius: 8px; padding: 7px 16px; cursor: pointer;
+      font-family: 'Space Mono'; font-size: 0.62rem; backdrop-filter: blur(8px);
+      transition: background 0.2s;
+    }
+    .q-back-btn:hover { background: rgba(255,255,255,0.18); }
+    .q-player-center {
+      position: absolute; inset: 0; z-index: 5;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px;
+    }
+    .q-play-circle {
+      width: 80px; height: 80px; border-radius: 50%;
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 2rem; cursor: pointer; backdrop-filter: blur(10px);
+      transition: background 0.2s, transform 0.2s;
+    }
+    .q-play-circle:hover { background: rgba(255,255,255,0.2); transform: scale(1.08); }
+    .q-player-note {
+      background: rgba(0,0,0,0.5); backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,255,255,0.08); border-radius: 10px;
+      padding: 12px 18px; max-width: 360px; text-align: center;
+    }
+    .q-player-note-text { font-family: 'Caveat'; font-size: 1rem; color: rgba(255,255,255,0.7); line-height: 1.6; }
+    .q-player-bottombar {
+      position: absolute; bottom: 0; left: 0; right: 0; z-index: 10;
+      padding: 24px 24px 28px;
+      background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+    }
+    .q-seekbar-track {
+      height: 3px; background: rgba(255,255,255,0.15); border-radius: 2px;
+      margin-bottom: 14px; cursor: pointer; position: relative;
+    }
+    .q-seekbar-fill { height: 100%; width: 0%; background: #fff; border-radius: 2px; }
+    .q-seekbar-thumb {
+      position: absolute; top: 50%; width: 10px; height: 10px; border-radius: 50%;
+      background: #fff; transform: translate(-50%, -50%); box-shadow: 0 0 6px rgba(255,255,255,0.5);
+      pointer-events: none;
+    }
+    .q-controls { display: flex; justify-content: space-between; align-items: center; }
+    .q-transport { display: flex; gap: 20px; align-items: center; }
+    .q-btn { background: none; border: none; cursor: pointer; transition: color 0.2s, transform 0.2s; }
+    .q-btn:hover { transform: scale(1.1); }
+    .q-btn.sm { color: rgba(255,255,255,0.5); font-size: 1.1rem; }
+    .q-btn.sm:hover { color: #fff; }
+    .q-btn.lg { color: #fff; font-size: 1.8rem; }
+    .q-ep-strip { display: flex; gap: 8px; align-items: center; }
+    .q-ep-dot {
+      width: 28px; height: 28px; border-radius: 6px; cursor: pointer;
+      transition: transform 0.2s, opacity 0.2s; opacity: 0.4;
+      display: flex; align-items: center; justify-content: center; font-size: 0.9rem;
+    }
+    .q-ep-dot.active { opacity: 1; transform: scale(1.15); }
+
+    /* ═════════════════════════════════════════════
+       PROPUESTA C — EL CASSETTE
+    ═════════════════════════════════════════════ */
+    #pC {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 70px 16px 48px;
+      background: #1e1208;
+      background-image:
+        radial-gradient(ellipse at 70% 30%, #3a1a0a 0%, transparent 60%),
+        radial-gradient(ellipse at 20% 80%, #2a0e14 0%, transparent 50%),
+        repeating-linear-gradient(45deg, transparent, transparent 12px, rgba(0,0,0,0.06) 12px, rgba(0,0,0,0.06) 24px);
+    }
+
+    .cassette-wrap { width: 100%; max-width: 560px; display: flex; flex-direction: column; align-items: center; gap: 28px; }
+
+    .cassette-device {
+      width: min(480px, 95vw);
+      background: linear-gradient(160deg, #303030, #1c1c1c, #141414);
+      border-radius: 22px;
+      padding: 22px;
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        inset 0 -2px 0 rgba(0,0,0,0.5),
+        0 2px 0 #3c3c3c,
+        0 4px 0 #282828,
+        0 6px 0 #181818,
+        0 8px 0 #0e0e0e,
+        0 16px 40px rgba(0,0,0,0.8);
+      position: relative;
+      transition: box-shadow 0.5s;
+    }
+    .cassette-device.playing {
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.08),
+        inset 0 -2px 0 rgba(0,0,0,0.5),
+        0 2px 0 #3c3c3c,
+        0 4px 0 #282828,
+        0 6px 0 #181818,
+        0 8px 0 #0e0e0e,
+        0 16px 40px rgba(0,0,0,0.8),
+        0 0 60px rgba(233,30,140,0.15);
+    }
+
+    .device-brand {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 14px;
+    }
+    .device-brand-name {
+      font-family: 'VT323'; font-size: 1.4rem; color: #e91e8c;
+      letter-spacing: 4px; text-shadow: 0 0 12px #e91e8c55;
+    }
+    .device-brand-model { font-family: 'Space Mono'; font-size: 0.5rem; color: #2a2a2a; letter-spacing: 2px; }
+
+    .device-lcd {
+      background: #0a1a0a; border-radius: 8px; padding: 10px 14px;
+      border: 1px solid #0e1e0e; margin-bottom: 14px; position: relative; overflow: hidden;
+      box-shadow: inset 0 3px 10px rgba(0,0,0,0.9), inset 0 0 20px rgba(0,100,0,0.1);
+    }
+    .device-lcd::before {
+      content: ''; position: absolute; inset: 0; border-radius: 8px;
+      background: repeating-linear-gradient(to bottom, transparent, transparent 2px, rgba(0,0,0,0.15) 2px, rgba(0,0,0,0.15) 3px);
+      pointer-events: none; z-index: 2;
+    }
+    .lcd-track { font-family: 'VT323'; font-size: 1.15rem; color: #00ff41; letter-spacing: 2px; text-shadow: 0 0 8px #00ff4144; position: relative; z-index: 3; }
+    .lcd-row2 { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; position: relative; z-index: 3; }
+    .lcd-time { font-family: 'VT323'; font-size: 0.95rem; color: #00bb2a; }
+    .lcd-status { font-family: 'VT323'; font-size: 0.95rem; color: #006610; }
+    .lcd-vu {
+      display: flex; gap: 2px; align-items: flex-end; height: 16px; margin-top: 4px; position: relative; z-index: 3;
+    }
+    .lcd-bar {
+      width: 4px; background: #00ff41; border-radius: 1px; height: 30%;
+      box-shadow: 0 0 4px #00ff4144;
+      transition: height 0.1s ease-out;
+    }
+
+    .device-slot {
+      background: #080808; border-radius: 12px; border: 2px solid #111;
+      box-shadow: inset 0 4px 20px rgba(0,0,0,0.95), inset 0 0 4px rgba(0,0,0,0.5);
+      padding: 14px; margin-bottom: 14px; min-height: 90px;
+      display: flex; align-items: center; justify-content: center;
+      position: relative; overflow: hidden;
+    }
+    .slot-empty { font-family: 'Space Mono'; font-size: 0.55rem; color: #1a1a1a; letter-spacing: 2px; text-align: center; line-height: 2; }
+    .slot-tape {
+      width: 100%; display: none;
+      animation: tape-insert 0.4s cubic-bezier(0.34,1.3,0.64,1);
+    }
+    @keyframes tape-insert { from { transform: translateY(-30px) scale(0.95); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+    @keyframes tape-eject { from { transform: translateY(0); opacity: 1; } to { transform: translateY(-40px); opacity: 0; } }
+    .slot-tape-body {
+      border-radius: 6px; padding: 10px 14px; position: relative;
+    }
+    .slot-tape-label { font-family: 'Caveat'; font-size: 1.1rem; color: #fff; font-weight: 700; }
+    .slot-tape-sub { font-family: 'Caveat'; font-size: 0.8rem; color: rgba(255,255,255,0.6); margin-top: 2px; }
+    .slot-tape-reels { display: flex; justify-content: space-around; margin-top: 10px; }
+    .tape-reel {
+      width: 26px; height: 26px; border-radius: 50%;
+      background: rgba(0,0,0,0.35); border: 2px solid rgba(255,255,255,0.2);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .tape-reel-hub { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.15); }
+    .tape-reel.spinning { animation: reel-spin 1.5s linear infinite; }
+    .tape-reel.spinning-r { animation: reel-spin 1.8s linear infinite reverse; }
+    @keyframes reel-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    .tape-gauge { margin-top: 8px; }
+    .tape-gauge-track { height: 3px; background: rgba(255,255,255,0.1); border-radius: 2px; }
+    .tape-gauge-fill { height: 100%; width: 0%; border-radius: 2px; transition: width 1s linear; background: rgba(255,255,255,0.5); }
+
+    .device-buttons { display: grid; grid-template-columns: 1fr 1fr 1.5fr 1fr 1fr; gap: 6px; }
+    .dev-btn {
+      padding: 9px 4px; text-align: center;
+      background: linear-gradient(180deg, #282828, #1c1c1c);
+      border: 1px solid #333; border-bottom: 3px solid #0e0e0e; border-radius: 6px;
+      color: #666; font-family: 'VT323'; font-size: 0.85rem; cursor: pointer;
+      transition: color 0.15s, transform 0.1s;
+      letter-spacing: 0.5px;
+    }
+    .dev-btn:hover { color: #ccc; }
+    .dev-btn:active { transform: translateY(2px); border-bottom-width: 1px; }
+    .dev-btn.play-btn {
+      background: linear-gradient(180deg, #d01870, #a01050);
+      border-color: #c0156a; border-bottom-color: #6a0830;
+      color: #fff; box-shadow: 0 0 12px rgba(233,30,140,0.3);
+    }
+    .dev-btn.play-btn:hover { box-shadow: 0 0 20px rgba(233,30,140,0.5); }
+
+    /* Cassette icons (the "tapes shelf") */
+    .tapes-section { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .tapes-label { font-family: 'Space Mono'; font-size: 0.55rem; color: #2e2e2e; letter-spacing: 3px; text-transform: uppercase; }
+    .tapes-row { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+    .tape-icon {
+      cursor: pointer; width: 120px;
+      transform-origin: bottom center;
+      transition: transform 0.25s cubic-bezier(0.34,1.56,0.64,1), opacity 0.2s;
+    }
+    .tape-icon:hover { transform: translateY(-6px) rotate(-3deg) scale(1.05); }
+    .tape-icon.inserted { opacity: 0.35; pointer-events: none; transform: scale(0.9); }
+    .tape-icon-body { border-radius: 8px; padding: 10px 12px; position: relative; }
+    .tape-icon-window {
+      background: rgba(0,0,0,0.3); border-radius: 4px; height: 26px;
+      margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between; padding: 4px 8px;
+    }
+    .tape-hub { width: 11px; height: 11px; border-radius: 50%; background: #0a0a0a; border: 1.5px solid rgba(255,255,255,0.2); }
+    .tape-ribbon { height: 2px; flex: 1; background: rgba(0,0,0,0.5); margin: 0 4px; border-radius: 1px; }
+    .tape-icon-label { font-family: 'Caveat'; font-size: 0.9rem; color: #fff; font-weight: 700; line-height: 1.3; }
+    .tape-icon-ep { font-family: 'Space Mono'; font-size: 0.45rem; color: rgba(255,255,255,0.5); margin-top: 4px; }
+
+    /* ── ANIMATIONS ── */
     @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0} }
-    @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
-    @keyframes fadeInScale { from{opacity:0;transform:scale(0.96)} to{opacity:1;transform:scale(1)} }
-    @keyframes marquee-scroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
-    @keyframes vu-dance { 0%,100%{height:20%} 25%{height:80%} 50%{height:40%} 75%{height:95%} }
-    @keyframes eject-out { from{transform:translateY(0)} to{transform:translateY(-40px)} }
-    @keyframes eject-in { from{transform:translateY(-40px) rotate(-5deg)} to{transform:translateY(0) rotate(0deg)} }
-    @keyframes reel-spin { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
-    @keyframes glow-pulse { 0%,100%{box-shadow:0 0 20px #e91e8c44} 50%{box-shadow:0 0 40px #e91e8c88, 0 0 60px #e91e8c33} }
-    @keyframes seek-progress { from{width:0} to{width:100%} }
-    @keyframes card-zoom { from{transform:scale(1)} to{transform:scale(1.05)} }
   </style>
 </head>
 <body>
 
-<!-- NAV -->
-<nav class="main-nav">
+<nav class="nav">
   <span class="label">v4</span>
   <a href="#pA" class="active">① Winamp</a>
   <a href="#pB">② Quiosco</a>
   <a href="#pC">③ Cassette</a>
 </nav>
 
-<!-- ════════════════════════════════════════════════════
-     PROPUESTA A: EL WINAMP
-     La web ES el reproductor. Una ventana de app retro.
-     ════════════════════════════════════════════════════ -->
-<section id="pA" style="
-  min-height: 100vh; scroll-margin-top: 44px;
-  background: radial-gradient(ellipse at 30% 70%, #1a0a2e 0%, #0a0a14 60%);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 64px 16px 40px; position: relative; overflow: hidden;
-">
-
-  <!-- Wallpaper grid -->
-  <div style="position:absolute;inset:0;background-image:linear-gradient(#ffffff05 1px,transparent 1px),linear-gradient(90deg,#ffffff05 1px,transparent 1px);background-size:40px 40px;pointer-events:none;"></div>
-
-  <!-- Label -->
-  <div style="position:absolute;top:52px;left:20px;pointer-events:none;">
-    <div style="font-family:'Space Mono';font-size:0.58rem;color:#e91e8c88;letter-spacing:3px;text-transform:uppercase;">Propuesta A</div>
-    <div style="font-size:1.2rem;font-weight:900;color:#ffffff66;font-family:'Nunito';">El Winamp</div>
-    <div style="font-family:'Space Mono';font-size:0.58rem;color:#33333388;">Espacio = play/pause · ← → = pista</div>
+<!-- ═══════════════════════════════════════════════════
+     A — EL WINAMP
+═══════════════════════════════════════════════════ -->
+<section id="pA" class="section">
+  <div class="sec-label">
+    <span class="tag">Propuesta A</span>
+    <span class="name">El Winamp</span>
+    <span class="hint">Espacio = play/pause · ← → = pista</span>
   </div>
 
-  <!-- WINAMP WINDOW -->
-  <div id="winamp" style="
-    width: min(820px, 96vw);
-    background: #1a1a1a;
-    border-radius: 8px;
-    border: 1px solid #333;
-    box-shadow: 0 0 0 1px #111, 0 20px 60px rgba(0,0,0,0.8), inset 0 1px 0 #2a2a2a;
-    overflow: hidden;
-    position: relative;
-  ">
-
-    <!-- Title bar -->
-    <div id="winamp-titlebar" style="
-      background: linear-gradient(90deg, #e91e8c, #6a0dad);
-      padding: 7px 12px;
-      display: flex; justify-content: space-between; align-items: center;
-      cursor: move; user-select: none;
-    ">
-      <div style="display:flex;align-items:center;gap:8px;">
-        <div style="width:8px;height:8px;border-radius:50%;background:#ff5f57;cursor:pointer;"></div>
-        <div style="width:8px;height:8px;border-radius:50%;background:#ffbd2e;cursor:pointer;"></div>
-        <div style="width:8px;height:8px;border-radius:50%;background:#28c840;cursor:pointer;"></div>
+  <div class="winamp-shell paused" id="winamp-shell">
+    <!-- Titlebar -->
+    <div class="winamp-titlebar" id="winamp-titlebar">
+      <div style="display:flex;align-items:center;gap:7px;">
+        <div class="win-dot r"></div>
+        <div class="win-dot y"></div>
+        <div class="win-dot g"></div>
       </div>
-      <div style="font-family:'Space Mono';font-size:0.65rem;color:#ffffffaa;letter-spacing:2px;">BARBARA PLAYER v1.0</div>
-      <div style="font-family:'Space Mono';font-size:0.6rem;color:#ffffff55;">●</div>
+      <div style="font-family:'Space Mono';font-size:0.6rem;color:rgba(255,255,255,0.6);letter-spacing:2px;">BARBARA PLAYER v1.0</div>
+      <div style="width:30px;"></div>
     </div>
 
-    <!-- Main body: visualizer + player + playlist -->
-    <div style="display:flex;gap:0;">
+    <!-- Body -->
+    <div class="winamp-body">
 
-      <!-- LEFT: VU visualizer -->
-      <div id="winamp-viz" style="
-        width: 56px; flex-shrink: 0;
-        background: #0a0a0a;
-        display: flex; align-items: flex-end; justify-content: center; gap: 2px;
-        padding: 8px 4px; min-height: 240px;
-        border-right: 1px solid #222;
-      ">
-        <!-- VU bars (animated via CSS) -->
-        <div class="vu-bar" style="width:5px;background:linear-gradient(to top,#e91e8c,#ff69b4);border-radius:1px;height:30%;animation:vu-dance 0.9s ease-in-out infinite;animation-delay:0s;"></div>
-        <div class="vu-bar" style="width:5px;background:linear-gradient(to top,#e91e8c,#ff69b4);border-radius:1px;height:60%;animation:vu-dance 0.9s ease-in-out infinite;animation-delay:0.1s;"></div>
-        <div class="vu-bar" style="width:5px;background:linear-gradient(to top,#e91e8c,#ff69b4);border-radius:1px;height:45%;animation:vu-dance 0.9s ease-in-out infinite;animation-delay:0.2s;"></div>
-        <div class="vu-bar" style="width:5px;background:linear-gradient(to top,#e91e8c,#ff69b4);border-radius:1px;height:75%;animation:vu-dance 0.9s ease-in-out infinite;animation-delay:0.3s;"></div>
-        <div class="vu-bar" style="width:5px;background:linear-gradient(to top,#6a0dad,#a855f7);border-radius:1px;height:55%;animation:vu-dance 0.9s ease-in-out infinite;animation-delay:0.4s;"></div>
-        <div class="vu-bar" style="width:5px;background:linear-gradient(to top,#6a0dad,#a855f7);border-radius:1px;height:85%;animation:vu-dance 0.9s ease-in-out infinite;animation-delay:0.5s;"></div>
+      <!-- VU Visualizer -->
+      <div class="winamp-viz" id="winamp-viz">
+        <!-- bars added by JS -->
       </div>
 
-      <!-- CENTER: video + controls -->
-      <div style="flex:1;display:flex;flex-direction:column;">
+      <!-- Center -->
+      <div class="winamp-center">
 
-        <!-- Now playing marquee -->
-        <div style="background:#0d0d0d;padding:6px 0;border-bottom:1px solid #1a1a1a;overflow:hidden;">
-          <div id="winamp-marquee-wrap" style="display:flex;width:200%;animation:marquee-scroll 8s linear infinite;">
-            <div id="winamp-marquee-text" style="font-family:'VT323';font-size:0.95rem;color:#e91e8c;letter-spacing:2px;white-space:nowrap;flex:1;padding:0 20px;">
-              ♫ Hola internet 👋 — Bárbara · 15.03.2026 · 2:34 &nbsp;&nbsp;&nbsp; ♫ Hola internet 👋 — Bárbara · 15.03.2026 · 2:34 &nbsp;&nbsp;&nbsp;
-            </div>
+        <!-- Marquee -->
+        <div class="winamp-marquee">
+          <span class="winamp-marquee-inner" id="winamp-marquee">
+            ♫ Hola internet 👋 — Bárbara · 15.03.2026 · 2:34 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ♫ Hola internet 👋 — Bárbara · 15.03.2026 · 2:34 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          </span>
+        </div>
+
+        <!-- Screen -->
+        <div class="winamp-screen paused" id="winamp-screen" onclick="wTogglePlay()">
+          <div class="winamp-screen-bg" id="w-bg" style="background:linear-gradient(135deg,#2d0e4f,#0a0a1a);"></div>
+          <div class="winamp-screen-art">
+            <div class="art-emoji" id="w-art">🌸</div>
           </div>
+          <div class="winamp-screen-scanlines"></div>
+          <div class="winamp-screen-overlay"></div>
+          <div class="winamp-screen-play" id="w-play-icon">▶</div>
+          <div class="winamp-time" id="w-time">0:00 / 2:34</div>
         </div>
 
-        <!-- Video area -->
-        <div id="winamp-video" style="
-          aspect-ratio: 16/9; background: #000;
-          display: flex; align-items: center; justify-content: center;
-          position: relative; overflow: hidden; cursor: pointer;
-        " onclick="winampTogglePlay()">
-          <!-- Background gradient changes per track -->
-          <div id="winamp-vid-bg" style="position:absolute;inset:0;background:linear-gradient(135deg,#2d0e4f,#0a0a1a);transition:background 0.6s;"></div>
-          <!-- Scanlines -->
-          <div style="position:absolute;inset:0;background:repeating-linear-gradient(to bottom,transparent,transparent 3px,rgba(0,0,0,0.1) 3px,rgba(0,0,0,0.1) 4px);pointer-events:none;z-index:2;"></div>
-          <!-- Play/pause icon -->
-          <div id="winamp-play-icon" style="position:relative;z-index:3;font-size:3rem;color:#e91e8c;opacity:0.7;transition:opacity 0.3s;text-shadow:0 0 30px #e91e8c;">▶</div>
-          <!-- Time overlay -->
-          <div style="position:absolute;bottom:8px;right:10px;z-index:4;font-family:'VT323';font-size:1rem;color:#e91e8c66;letter-spacing:1px;" id="winamp-time-display">0:00 / 2:34</div>
-        </div>
-
-        <!-- Seek bar -->
-        <div style="padding:8px 12px;background:#0d0d0d;border-top:1px solid #111;">
-          <div id="winamp-seekbar-track" style="height:6px;background:#1a1a1a;border-radius:3px;position:relative;cursor:pointer;" onclick="winampSeek(event)">
-            <div id="winamp-seekbar-fill" style="height:100%;width:0%;background:linear-gradient(90deg,#e91e8c,#6a0dad);border-radius:3px;transition:width 0.1s linear;pointer-events:none;"></div>
-            <div id="winamp-seekbar-thumb" style="position:absolute;top:50%;right:auto;width:12px;height:12px;background:#e91e8c;border-radius:50%;transform:translate(-50%,-50%);left:0%;transition:left 0.1s linear;box-shadow:0 0 6px #e91e8c;pointer-events:none;"></div>
+        <!-- Seekbar -->
+        <div class="winamp-seekrow">
+          <div class="winamp-seekbar-track" id="w-seek-track" onclick="wSeek(event)">
+            <div class="winamp-seekbar-fill" id="w-seek-fill"></div>
+            <div class="winamp-seekbar-thumb" id="w-seek-thumb" style="left:0%"></div>
           </div>
         </div>
 
         <!-- Controls -->
-        <div style="padding:10px 12px;background:#111;display:flex;justify-content:space-between;align-items:center;border-top:1px solid #1a1a1a;">
-          <!-- Transport buttons -->
-          <div style="display:flex;gap:8px;align-items:center;">
-            <button class="winamp-btn" onclick="winampPrev()" title="Anterior" style="background:#1a1a1a;border:1px solid #2a2a2a;color:#888;border-radius:5px;padding:6px 10px;cursor:pointer;font-size:0.8rem;transition:all 0.15s;" onmouseover="this.style.background='#252525';this.style.color='#fff'" onmouseout="this.style.background='#1a1a1a';this.style.color='#888'">⏮</button>
-            <button id="winamp-playbtn" class="winamp-btn" onclick="winampTogglePlay()" style="background:linear-gradient(135deg,#e91e8c,#6a0dad);border:none;color:#fff;border-radius:5px;padding:6px 14px;cursor:pointer;font-size:0.9rem;transition:all 0.15s;" onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">⏸</button>
-            <button class="winamp-btn" onclick="winampNext()" title="Siguiente" style="background:#1a1a1a;border:1px solid #2a2a2a;color:#888;border-radius:5px;padding:6px 10px;cursor:pointer;font-size:0.8rem;transition:all 0.15s;" onmouseover="this.style.background='#252525';this.style.color='#fff'" onmouseout="this.style.background='#1a1a1a';this.style.color='#888'">⏭</button>
+        <div class="winamp-controls">
+          <div style="display:flex;gap:7px;align-items:center;">
+            <button class="wbtn" onclick="wPrev()">⏮</button>
+            <button class="wbtn primary" id="w-playbtn" onclick="wTogglePlay()">▶</button>
+            <button class="wbtn" onclick="wNext()">⏭</button>
           </div>
-          <!-- Volume -->
-          <div style="display:flex;align-items:center;gap:8px;">
-            <span style="font-size:0.75rem;color:#444;">🔉</span>
-            <div style="width:80px;height:4px;background:#1a1a1a;border-radius:2px;position:relative;cursor:pointer;" onclick="winampVolumeClick(event,this)">
-              <div id="winamp-vol-fill" style="height:100%;width:80%;background:#e91e8c;border-radius:2px;pointer-events:none;"></div>
+          <div style="display:flex;align-items:center;gap:7px;">
+            <span style="font-size:0.75rem;color:#333;">🔉</span>
+            <div class="winamp-vol-track" onclick="wVol(event,this)">
+              <div class="winamp-vol-fill" id="w-vol"></div>
             </div>
-            <span style="font-size:0.75rem;color:#444;">🔊</span>
+            <span style="font-size:0.75rem;color:#333;">🔊</span>
           </div>
         </div>
 
       </div><!-- /center -->
 
-      <!-- RIGHT: Playlist -->
-      <div style="
-        width: 200px; flex-shrink: 0;
-        background: #0d0d0d;
-        border-left: 1px solid #1a1a1a;
-        display: flex; flex-direction: column;
-      ">
-        <div style="padding:8px 10px;border-bottom:1px solid #1a1a1a;font-family:'Space Mono';font-size:0.55rem;color:#333;letter-spacing:2px;text-transform:uppercase;">Playlist · 3 pistas</div>
-        <div style="flex:1;overflow-y:auto;" id="winamp-playlist">
+      <!-- Playlist -->
+      <div class="winamp-playlist">
+        <div class="wpl-header">Playlist · 3 pistas</div>
 
-          <div class="wp-track" id="wt-0" onclick="winampSelectTrack(0)"
-            style="padding:10px;cursor:pointer;border-bottom:1px solid #111;background:#1a1a1a;border-left:3px solid #e91e8c;display:flex;flex-direction:column;gap:2px;transition:background 0.15s;">
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-              <span style="font-family:'Space Mono';font-size:0.55rem;color:#e91e8c;">01</span>
-              <span style="font-family:'Space Mono';font-size:0.55rem;color:#e91e8c;">2:34</span>
-            </div>
-            <div style="font-family:'Nunito';font-size:0.78rem;font-weight:700;color:#fff;">Hola internet 👋</div>
-            <div style="font-family:'Space Mono';font-size:0.5rem;color:#555;">15 mar 2026</div>
+        <div class="wpl-track active" id="wt-0" onclick="wSelect(0)">
+          <div class="wpl-thumb" style="background:linear-gradient(135deg,#3d0060,#e91e8c);">🌸</div>
+          <div class="wpl-info">
+            <div class="wpl-title">Hola internet 👋</div>
+            <div class="wpl-meta"><span>01</span><span>2:34</span></div>
           </div>
+        </div>
 
-          <div class="wp-track" id="wt-1" onclick="winampSelectTrack(1)"
-            style="padding:10px;cursor:pointer;border-bottom:1px solid #111;border-left:3px solid transparent;display:flex;flex-direction:column;gap:2px;transition:background 0.15s;" onmouseover="this.style.background='#141414'" onmouseout="this.style.background='transparent'">
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-              <span style="font-family:'Space Mono';font-size:0.55rem;color:#555;">02</span>
-              <span style="font-family:'Space Mono';font-size:0.55rem;color:#555;">1:47</span>
-            </div>
-            <div style="font-family:'Nunito';font-size:0.78rem;font-weight:700;color:#aaa;">Segundo intento 😅</div>
-            <div style="font-family:'Space Mono';font-size:0.5rem;color:#333;">22 mar 2026</div>
+        <div class="wpl-track" id="wt-1" onclick="wSelect(1)">
+          <div class="wpl-thumb" style="background:linear-gradient(135deg,#0e2a3a,#0984e3);">😅</div>
+          <div class="wpl-info">
+            <div class="wpl-title">Segundo intento</div>
+            <div class="wpl-meta"><span>02</span><span>1:47</span></div>
           </div>
+        </div>
 
-          <div class="wp-track" id="wt-2" onclick="winampSelectTrack(2)"
-            style="padding:10px;cursor:pointer;border-bottom:1px solid #111;border-left:3px solid transparent;display:flex;flex-direction:column;gap:2px;transition:background 0.15s;" onmouseover="this.style.background='#141414'" onmouseout="this.style.background='transparent'">
-            <div style="display:flex;justify-content:space-between;align-items:center;">
-              <span style="font-family:'Space Mono';font-size:0.55rem;color:#555;">03</span>
-              <span style="font-family:'Space Mono';font-size:0.55rem;color:#555;">3:12</span>
-            </div>
-            <div style="font-family:'Nunito';font-size:0.78rem;font-weight:700;color:#aaa;">Menos vergüenza</div>
-            <div style="font-family:'Space Mono';font-size:0.5rem;color:#333;">29 mar 2026</div>
+        <div class="wpl-track" id="wt-2" onclick="wSelect(2)">
+          <div class="wpl-thumb" style="background:linear-gradient(135deg,#1a3a0e,#27ae60);">🌱</div>
+          <div class="wpl-info">
+            <div class="wpl-title">Menos vergüenza</div>
+            <div class="wpl-meta"><span>03</span><span>3:12</span></div>
           </div>
+        </div>
 
-        </div><!-- /playlist -->
-      </div><!-- /right -->
-
-    </div><!-- /main body -->
-
-  </div><!-- /winamp -->
-
+      </div>
+    </div><!-- /winamp-body -->
+  </div><!-- /winamp-shell -->
 </section>
 
-<!-- ════════════════════════════════════════════════════
-     PROPUESTA B: EL QUIOSCO
-     Grid fullscreen de channel cards → player overlay
-     ════════════════════════════════════════════════════ -->
-<section id="pB" style="
-  min-height: 100vh; scroll-margin-top: 44px;
-  background: #050505;
-  position: relative; overflow: hidden;
-">
-
-  <!-- Label -->
-  <div style="position:absolute;top:52px;left:20px;z-index:40;pointer-events:none;">
-    <div style="font-family:'Space Mono';font-size:0.58rem;color:#e91e8c88;letter-spacing:3px;text-transform:uppercase;">Propuesta B</div>
-    <div style="font-size:1.2rem;font-weight:900;color:#ffffff66;font-family:'Nunito';">El Quiosco</div>
-    <div style="font-family:'Space Mono';font-size:0.58rem;color:#33333388;">elige un episodio · Esc para volver</div>
+<!-- ═══════════════════════════════════════════════════
+     B — EL QUIOSCO
+═══════════════════════════════════════════════════ -->
+<section id="pB" class="section">
+  <div class="sec-label">
+    <span class="tag">Propuesta B</span>
+    <span class="name">El Quiosco</span>
+    <span class="hint">elige · Esc para volver</span>
   </div>
 
-  <!-- GRID STATE -->
-  <div id="quiosco-grid" style="
-    position: absolute; inset: 0; z-index: 10;
-    display: flex; align-items: center; justify-content: center;
-    padding: 64px 24px 24px;
-    transition: opacity 0.4s, transform 0.4s;
-  ">
-    <div style="width:100%;max-width:900px;">
-      <!-- Title row -->
-      <div style="margin-bottom:24px;display:flex;justify-content:space-between;align-items:flex-end;">
-        <div>
-          <div style="font-family:'Space Mono';font-size:0.6rem;color:#333;letter-spacing:3px;text-transform:uppercase;margin-bottom:4px;">El diario de</div>
-          <div style="font-family:'Nunito';font-size:2rem;font-weight:900;color:#fff;">Bárbara</div>
-        </div>
-        <div style="font-family:'Space Mono';font-size:0.6rem;color:#333;letter-spacing:1px;">3 episodios disponibles</div>
+  <!-- Grid -->
+  <div class="quiosco-grid" id="q-grid">
+    <div class="quiosco-header">
+      <div>
+        <div class="quiosco-subtitle">el diario de</div>
+        <div class="quiosco-title">Bárbara</div>
       </div>
-
-      <!-- Cards grid -->
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;">
-
-        <!-- Card 1 -->
-        <div class="quiosco-card" onclick="quioscoOpen(0)"
-          style="border-radius:12px;overflow:hidden;cursor:pointer;position:relative;aspect-ratio:2/3;background:linear-gradient(160deg,#2d0e4f,#6a0dad,#e91e8c);transition:transform 0.25s,box-shadow 0.25s;"
-          onmouseover="this.style.transform='scale(1.04)';this.style.boxShadow='0 0 0 2px #e91e8c, 0 20px 40px rgba(233,30,140,0.3)'"
-          onmouseout="this.style.transform='scale(1)';this.style.boxShadow='none'">
-          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 0%,rgba(0,0,0,0.1) 60%);"></div>
-          <!-- Episode number -->
-          <div style="position:absolute;top:12px;left:12px;font-family:'VT323';font-size:1.2rem;color:#ffffff88;letter-spacing:2px;">EP 01</div>
-          <!-- Center icon -->
-          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);font-size:3rem;filter:drop-shadow(0 4px 20px rgba(233,30,140,0.5));">🌸</div>
-          <!-- Bottom info -->
-          <div style="position:absolute;bottom:0;left:0;right:0;padding:16px;">
-            <div style="font-family:'Nunito';font-size:1rem;font-weight:900;color:#fff;margin-bottom:2px;">Hola internet</div>
-            <div style="font-family:'Space Mono';font-size:0.55rem;color:#ffffff66;">15 mar · 2:34</div>
-          </div>
-        </div>
-
-        <!-- Card 2 -->
-        <div class="quiosco-card" onclick="quioscoOpen(1)"
-          style="border-radius:12px;overflow:hidden;cursor:pointer;position:relative;aspect-ratio:2/3;background:linear-gradient(160deg,#0e2a3a,#0984e3,#00d2ff);transition:transform 0.25s,box-shadow 0.25s;"
-          onmouseover="this.style.transform='scale(1.04)';this.style.boxShadow='0 0 0 2px #00d2ff, 0 20px 40px rgba(0,210,255,0.2)'"
-          onmouseout="this.style.transform='scale(1)';this.style.boxShadow='none'">
-          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 0%,rgba(0,0,0,0.1) 60%);"></div>
-          <div style="position:absolute;top:12px;left:12px;font-family:'VT323';font-size:1.2rem;color:#ffffff88;letter-spacing:2px;">EP 02</div>
-          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);font-size:3rem;filter:drop-shadow(0 4px 20px rgba(0,210,255,0.5));">😅</div>
-          <div style="position:absolute;bottom:0;left:0;right:0;padding:16px;">
-            <div style="font-family:'Nunito';font-size:1rem;font-weight:900;color:#fff;margin-bottom:2px;">Segundo intento</div>
-            <div style="font-family:'Space Mono';font-size:0.55rem;color:#ffffff66;">22 mar · 1:47</div>
-          </div>
-        </div>
-
-        <!-- Card 3 -->
-        <div class="quiosco-card" onclick="quioscoOpen(2)"
-          style="border-radius:12px;overflow:hidden;cursor:pointer;position:relative;aspect-ratio:2/3;background:linear-gradient(160deg,#1a3a0e,#27ae60,#a8e063);transition:transform 0.25s,box-shadow 0.25s;"
-          onmouseover="this.style.transform='scale(1.04)';this.style.boxShadow='0 0 0 2px #27ae60, 0 20px 40px rgba(39,174,96,0.2)'"
-          onmouseout="this.style.transform='scale(1)';this.style.boxShadow='none'">
-          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.85) 0%,rgba(0,0,0,0.1) 60%);"></div>
-          <div style="position:absolute;top:12px;left:12px;font-family:'VT323';font-size:1.2rem;color:#ffffff88;letter-spacing:2px;">EP 03</div>
-          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-60%);font-size:3rem;filter:drop-shadow(0 4px 20px rgba(168,224,99,0.5));">🌱</div>
-          <div style="position:absolute;bottom:0;left:0;right:0;padding:16px;">
-            <div style="font-family:'Nunito';font-size:1rem;font-weight:900;color:#fff;margin-bottom:2px;">Menos vergüenza</div>
-            <div style="font-family:'Space Mono';font-size:0.55rem;color:#ffffff66;">29 mar · 3:12</div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div><!-- /grid -->
-
-  <!-- PLAYER STATE (overlay) -->
-  <div id="quiosco-player" style="
-    position: absolute; inset: 0; z-index: 20;
-    background: #000;
-    display: flex; flex-direction: column;
-    opacity: 0; pointer-events: none;
-    transition: opacity 0.4s;
-  ">
-    <!-- Player top bar -->
-    <div style="position:absolute;top:0;left:0;right:0;z-index:30;padding:12px 20px;background:linear-gradient(to bottom,rgba(0,0,0,0.8),transparent);display:flex;justify-content:space-between;align-items:center;">
-      <button onclick="quioscoClose()" style="background:#ffffff15;border:1px solid #ffffff22;color:#fff;border-radius:8px;padding:6px 14px;cursor:pointer;font-family:'Space Mono';font-size:0.65rem;backdrop-filter:blur(10px);transition:background 0.2s;" onmouseover="this.style.background='#ffffff25'" onmouseout="this.style.background='#ffffff15'">← Volver</button>
-      <div id="q-player-title" style="font-family:'Nunito';font-weight:900;color:#fff;font-size:0.9rem;"></div>
-      <div id="q-ep-badge" style="font-family:'VT323';font-size:0.9rem;color:#ffffff55;letter-spacing:2px;"></div>
+      <div class="quiosco-count">3 episodios</div>
     </div>
 
-    <!-- Video area -->
-    <div id="q-video-area" style="flex:1;display:flex;align-items:center;justify-content:center;background:#000;position:relative;">
-      <div id="q-video-bg" style="position:absolute;inset:0;transition:background 0.6s;"></div>
-      <!-- Scanlines -->
-      <div style="position:absolute;inset:0;background:repeating-linear-gradient(to bottom,transparent,transparent 3px,rgba(0,0,0,0.06) 3px,rgba(0,0,0,0.06) 4px);pointer-events:none;z-index:2;"></div>
-      <!-- Play btn -->
-      <div style="position:relative;z-index:3;width:72px;height:72px;border-radius:50%;background:#ffffff15;display:flex;align-items:center;justify-content:center;font-size:1.8rem;cursor:pointer;backdrop-filter:blur(10px);border:1px solid #ffffff22;transition:background 0.2s;" onmouseover="this.style.background='#ffffff25'" onmouseout="this.style.background='#ffffff15'">▶</div>
+    <div class="quiosco-cards">
+
+      <div class="q-card" tabindex="0" onclick="qOpen(0)">
+        <div class="q-card-bg" style="background:linear-gradient(160deg,#1a0630,#6a0dad,#e91e8c);"></div>
+        <div class="q-card-fade"></div>
+        <div class="q-card-ep">EP 01</div>
+        <div class="q-card-new">NUEVO</div>
+        <div class="q-card-icon">🌸</div>
+        <div class="q-card-bottom">
+          <div class="q-card-title">Hola internet 👋</div>
+          <div class="q-card-note">"Casi no lo subo. Pero aquí está."</div>
+          <div class="q-card-dur">15 mar 2026 · 2:34</div>
+        </div>
+      </div>
+
+      <div class="q-card" tabindex="0" onclick="qOpen(1)">
+        <div class="q-card-bg" style="background:linear-gradient(160deg,#060e2a,#0984e3,#00d2ff);"></div>
+        <div class="q-card-fade"></div>
+        <div class="q-card-ep">EP 02</div>
+        <div class="q-card-icon">😅</div>
+        <div class="q-card-bottom">
+          <div class="q-card-title">Segundo intento</div>
+          <div class="q-card-note">"Esta vez no me temblaron tanto."</div>
+          <div class="q-card-dur">22 mar 2026 · 1:47</div>
+        </div>
+      </div>
+
+      <div class="q-card" tabindex="0" onclick="qOpen(2)">
+        <div class="q-card-bg" style="background:linear-gradient(160deg,#061a0a,#27ae60,#a8e063);"></div>
+        <div class="q-card-fade"></div>
+        <div class="q-card-ep">EP 03</div>
+        <div class="q-card-icon">🌱</div>
+        <div class="q-card-bottom">
+          <div class="q-card-title">Menos vergüenza</div>
+          <div class="q-card-note">"¿Lo notáis? Creo que sí."</div>
+          <div class="q-card-dur">29 mar 2026 · 3:12</div>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- /q-grid -->
+
+  <!-- Player overlay -->
+  <div class="quiosco-player" id="q-player">
+    <div class="q-player-bg" id="q-player-bg"></div>
+    <div class="q-player-scanlines"></div>
+    <div class="q-player-vignette"></div>
+
+    <div class="q-player-topbar">
+      <button class="q-back-btn" onclick="qClose()">← Episodios</button>
+      <div style="font-family:'VT323';font-size:1rem;color:rgba(255,255,255,0.4);letter-spacing:3px;" id="q-ep-badge"></div>
+      <div style="width:100px;"></div>
     </div>
 
-    <!-- Player controls bottom -->
-    <div style="position:absolute;bottom:0;left:0;right:0;padding:20px;background:linear-gradient(to top,rgba(0,0,0,0.9),transparent);">
-      <!-- Seekbar -->
-      <div style="height:4px;background:#ffffff22;border-radius:2px;margin-bottom:16px;cursor:pointer;">
-        <div id="q-seekbar" style="height:100%;width:0%;background:#fff;border-radius:2px;transition:width 0.1s;"></div>
+    <div class="q-player-center">
+      <div class="q-play-circle" id="q-play-circle">▶</div>
+      <div>
+        <div style="font-family:'Nunito';font-size:1.3rem;font-weight:900;color:#fff;text-align:center;margin-bottom:6px;" id="q-player-title"></div>
       </div>
-      <div style="display:flex;justify-content:space-between;align-items:center;">
-        <div style="display:flex;gap:16px;align-items:center;">
-          <button onclick="quioscoOpen((currentQuiosco-1+3)%3)" style="background:none;border:none;color:#ffffff66;font-size:1.2rem;cursor:pointer;transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#ffffff66'">⏮</button>
-          <button style="background:none;border:none;color:#fff;font-size:1.8rem;cursor:pointer;">⏸</button>
-          <button onclick="quioscoOpen((currentQuiosco+1)%3)" style="background:none;border:none;color:#ffffff66;font-size:1.2rem;cursor:pointer;transition:color 0.2s;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#ffffff66'">⏭</button>
+      <div class="q-player-note">
+        <div class="q-player-note-text" id="q-player-note"></div>
+      </div>
+    </div>
+
+    <div class="q-player-bottombar">
+      <div class="q-seekbar-track" id="q-seek-track">
+        <div class="q-seekbar-fill" id="q-seek-fill"></div>
+        <div class="q-seekbar-thumb" id="q-seek-thumb" style="left:0%"></div>
+      </div>
+      <div class="q-controls">
+        <div class="q-transport">
+          <button class="q-btn sm" onclick="qOpen((qCurrent-1+3)%3)">⏮</button>
+          <button class="q-btn lg">⏸</button>
+          <button class="q-btn sm" onclick="qOpen((qCurrent+1)%3)">⏭</button>
         </div>
-        <div id="q-time" style="font-family:'Space Mono';font-size:0.65rem;color:#ffffff55;">0:00 / 2:34</div>
-        <div style="display:flex;gap:12px;">
-          <div style="font-size:0.9rem;cursor:pointer;color:#ffffff66;" title="siguiente episodio">EP →</div>
+        <div style="font-family:'Space Mono';font-size:0.6rem;color:rgba(255,255,255,0.3);" id="q-time-label">0:00 / 2:34</div>
+        <div class="q-ep-strip" id="q-ep-strip">
+          <!-- dots added by JS -->
         </div>
       </div>
     </div>
 
-  </div><!-- /player -->
-
+  </div><!-- /q-player -->
 </section>
 
-<!-- ════════════════════════════════════════════════════
-     PROPUESTA C: EL CASSETTE
-     La web es un reproductor de cassette físico.
-     Los cassettes son los iconos de navegación.
-     ════════════════════════════════════════════════════ -->
-<section id="pC" style="
-  min-height: 100vh; scroll-margin-top: 44px;
-  background: #2a1a0a;
-  background-image:
-    repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(0,0,0,0.08) 10px,rgba(0,0,0,0.08) 20px),
-    linear-gradient(180deg,#3a2010,#2a1a0a);
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  padding: 64px 16px 48px; position: relative;
-">
-
-  <!-- Label -->
-  <div style="position:absolute;top:52px;left:20px;pointer-events:none;">
-    <div style="font-family:'Space Mono';font-size:0.58rem;color:#e91e8c88;letter-spacing:3px;text-transform:uppercase;">Propuesta C</div>
-    <div style="font-size:1.2rem;font-weight:900;color:#ffffff66;font-family:'Nunito';">El Cassette</div>
-    <div style="font-family:'Space Mono';font-size:0.58rem;color:#55555588;">pon una cinta en el reproductor</div>
+<!-- ═══════════════════════════════════════════════════
+     C — EL CASSETTE
+═══════════════════════════════════════════════════ -->
+<section id="pC" class="section">
+  <div class="sec-label">
+    <span class="tag">Propuesta C</span>
+    <span class="name">El Cassette</span>
+    <span class="hint">pon una cinta en el reproductor</span>
   </div>
 
-  <div style="width:100%;max-width:700px;display:flex;flex-direction:column;align-items:center;gap:32px;">
+  <div class="cassette-wrap">
 
-    <!-- THE DEVICE -->
-    <div id="cassette-device" style="
-      width: min(480px, 92vw);
-      background: linear-gradient(160deg, #2a2a2a, #1a1a1a);
-      border-radius: 20px;
-      padding: 20px;
-      box-shadow:
-        0 2px 0 #3a3a3a,
-        0 4px 0 #111,
-        0 8px 0 #0a0a0a,
-        0 12px 30px rgba(0,0,0,0.7),
-        inset 0 1px 0 #3a3a3a,
-        inset 0 -1px 0 #111;
-      position: relative;
-    ">
+    <!-- The Device -->
+    <div class="cassette-device" id="cassette-device">
 
-      <!-- Brand label -->
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
-        <div style="font-family:'VT323';font-size:1.3rem;color:#e91e8c;letter-spacing:3px;text-shadow:0 0 10px #e91e8c55;">BARBA-TRON</div>
-        <div style="font-family:'Space Mono';font-size:0.55rem;color:#333;letter-spacing:2px;">MK II</div>
+      <div class="device-brand">
+        <div class="device-brand-name">BARBA-TRON</div>
+        <div class="device-brand-model">MK II · STEREO</div>
       </div>
 
-      <!-- LCD Display -->
-      <div style="
-        background: #0a1a0a;
-        border-radius: 8px;
-        padding: 10px 14px;
-        border: 1px solid #1a2a1a;
-        box-shadow: inset 0 2px 8px rgba(0,0,0,0.8), 0 0 0 1px #0a0a0a;
-        margin-bottom: 16px;
-        position: relative; overflow: hidden;
-      ">
-        <!-- Scanline overlay on LCD -->
-        <div style="position:absolute;inset:0;background:repeating-linear-gradient(to bottom,transparent,transparent 2px,rgba(0,0,0,0.2) 2px,rgba(0,0,0,0.2) 3px);pointer-events:none;z-index:2;border-radius:8px;"></div>
-        <div style="position:relative;z-index:3;">
-          <div id="lcd-track" style="font-family:'VT323';font-size:1.2rem;color:#00ff41;letter-spacing:2px;text-shadow:0 0 8px #00ff4155;">SIN CINTA</div>
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2px;">
-            <div id="lcd-time" style="font-family:'VT323';font-size:0.9rem;color:#00aa2a;">0:00</div>
-            <div id="lcd-status" style="font-family:'VT323';font-size:0.9rem;color:#005510;">■ STOP</div>
-          </div>
+      <!-- LCD -->
+      <div class="device-lcd">
+        <div class="lcd-track" id="lcd-track">SIN CINTA &nbsp;◇</div>
+        <div class="lcd-row2">
+          <div class="lcd-time" id="lcd-time">0:00</div>
+          <div class="lcd-status" id="lcd-status">■ STOP</div>
+        </div>
+        <div class="lcd-vu" id="lcd-vu">
+          <!-- bars added by JS -->
         </div>
       </div>
 
-      <!-- CASSETTE SLOT / window -->
-      <div id="cassette-slot" style="
-        background: #111;
-        border-radius: 10px;
-        border: 2px solid #222;
-        box-shadow: inset 0 4px 16px rgba(0,0,0,0.9);
-        padding: 16px;
-        margin-bottom: 16px;
-        min-height: 80px;
-        display: flex; align-items: center; justify-content: center;
-        transition: all 0.3s;
-        position: relative; overflow: hidden;
-      ">
-        <!-- Empty slot state -->
-        <div id="slot-empty" style="font-family:'Space Mono';font-size:0.6rem;color:#222;letter-spacing:2px;text-align:center;">INSERTA UNA CINTA<br>▼</div>
-
-        <!-- Cassette inserted (hidden by default) -->
-        <div id="slot-cassette" style="display:none;width:100%;animation:eject-in 0.4s ease;">
-          <!-- Cassette body -->
-          <div id="slot-cassette-body" style="background:#e91e8c;border-radius:6px;padding:10px 14px;position:relative;">
-            <div id="slot-cassette-label" style="font-family:'Caveat';font-size:1.1rem;color:#fff;font-weight:700;"></div>
-            <div id="slot-cassette-sub" style="font-family:'Caveat';font-size:0.8rem;color:#ffffff88;margin-top:2px;"></div>
-            <!-- Reels (animated when playing) -->
-            <div style="display:flex;justify-content:space-around;margin-top:8px;">
-              <div id="reel-left" style="width:22px;height:22px;border-radius:50%;background:#0006;border:2px solid #fff4;display:flex;align-items:center;justify-content:center;">
-                <div style="width:8px;height:8px;border-radius:50%;background:#fff2;"></div>
-              </div>
-              <div id="reel-right" style="width:22px;height:22px;border-radius:50%;background:#0006;border:2px solid #fff4;display:flex;align-items:center;justify-content:center;">
-                <div style="width:8px;height:8px;border-radius:50%;background:#fff2;"></div>
-              </div>
+      <!-- Slot -->
+      <div class="device-slot" id="device-slot">
+        <div class="slot-empty" id="slot-empty">INSERTA<br>UNA CINTA<br>▼</div>
+        <div class="slot-tape" id="slot-tape">
+          <div class="slot-tape-body" id="slot-tape-body">
+            <div class="slot-tape-label" id="slot-tape-label"></div>
+            <div class="slot-tape-sub" id="slot-tape-sub"></div>
+            <div class="slot-tape-reels">
+              <div class="tape-reel" id="reel-l"><div class="tape-reel-hub"></div></div>
+              <div class="tape-reel" id="reel-r"><div class="tape-reel-hub"></div></div>
+            </div>
+            <div class="tape-gauge">
+              <div class="tape-gauge-track"><div class="tape-gauge-fill" id="tape-gauge"></div></div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- CONTROL BUTTONS -->
-      <div style="display:flex;gap:8px;justify-content:center;">
-        <button onclick="cassetteBtn('rew')" style="flex:1;padding:10px 6px;background:linear-gradient(180deg,#2a2a2a,#1a1a1a);border:1px solid #333;border-bottom:3px solid #111;border-radius:6px;color:#888;font-family:'VT323';font-size:1rem;cursor:pointer;transition:all 0.1s;letter-spacing:1px;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'" onmousedown="this.style.borderBottom='1px solid #111';this.style.transform='translateY(2px)'" onmouseup="this.style.borderBottom='3px solid #111';this.style.transform='translateY(0)'">⏮ REW</button>
-        <button id="cassette-play-btn" onclick="cassetteBtn('play')" style="flex:1.5;padding:10px 6px;background:linear-gradient(180deg,#e91e8c,#c0157a);border:1px solid #c0157a;border-bottom:3px solid #7a0a4a;border-radius:6px;color:#fff;font-family:'VT323';font-size:1rem;cursor:pointer;transition:all 0.1s;letter-spacing:1px;box-shadow:0 0 10px #e91e8c44;" onmousedown="this.style.borderBottom='1px solid #7a0a4a';this.style.transform='translateY(2px)'" onmouseup="this.style.borderBottom='3px solid #7a0a4a';this.style.transform='translateY(0)'">▶ PLAY</button>
-        <button onclick="cassetteBtn('ff')" style="flex:1;padding:10px 6px;background:linear-gradient(180deg,#2a2a2a,#1a1a1a);border:1px solid #333;border-bottom:3px solid #111;border-radius:6px;color:#888;font-family:'VT323';font-size:1rem;cursor:pointer;transition:all 0.1s;letter-spacing:1px;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'" onmousedown="this.style.borderBottom='1px solid #111';this.style.transform='translateY(2px)'" onmouseup="this.style.borderBottom='3px solid #111';this.style.transform='translateY(0)'">FF ⏭</button>
-        <button onclick="cassetteBtn('stop')" style="flex:1;padding:10px 6px;background:linear-gradient(180deg,#2a2a2a,#1a1a1a);border:1px solid #333;border-bottom:3px solid #111;border-radius:6px;color:#888;font-family:'VT323';font-size:1rem;cursor:pointer;transition:all 0.1s;letter-spacing:1px;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'" onmousedown="this.style.borderBottom='1px solid #111';this.style.transform='translateY(2px)'" onmouseup="this.style.borderBottom='3px solid #111';this.style.transform='translateY(0)'">■ STOP</button>
-        <button onclick="cassetteBtn('eject')" style="flex:1;padding:10px 6px;background:linear-gradient(180deg,#2a2a2a,#1a1a1a);border:1px solid #333;border-bottom:3px solid #111;border-radius:6px;color:#888;font-family:'VT323';font-size:0.85rem;cursor:pointer;transition:all 0.1s;letter-spacing:1px;" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='#888'" onmousedown="this.style.borderBottom='1px solid #111';this.style.transform='translateY(2px)'" onmouseup="this.style.borderBottom='3px solid #111';this.style.transform='translateY(0)'">▲ EJECT</button>
+      <!-- Buttons -->
+      <div class="device-buttons">
+        <button class="dev-btn" onclick="cBtn('rew')">⏮ REW</button>
+        <button class="dev-btn" onclick="cBtn('stop')">■ STOP</button>
+        <button class="dev-btn play-btn" id="c-play-btn" onclick="cBtn('play')">▶ PLAY</button>
+        <button class="dev-btn" onclick="cBtn('ff')">FF ⏭</button>
+        <button class="dev-btn" onclick="cBtn('eject')">▲ EJECT</button>
       </div>
 
     </div><!-- /device -->
 
-    <!-- CASSETTES BELOW — the "icons" -->
-    <div style="display:flex;flex-direction:column;align-items:center;gap:10px;width:100%;">
-      <div style="font-family:'Space Mono';font-size:0.6rem;color:#555;letter-spacing:3px;text-transform:uppercase;margin-bottom:4px;">Cintas disponibles</div>
-      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+    <!-- Tapes -->
+    <div class="tapes-section">
+      <div class="tapes-label">Cintas disponibles</div>
+      <div class="tapes-row">
 
-        <!-- Cassette 1 -->
-        <div class="cassette-icon" onclick="cassetteInsert(0)"
-          style="cursor:pointer;width:130px;transition:transform 0.2s;" id="ci-0"
-          onmouseover="this.style.transform='translateY(-4px) rotate(-2deg)'" onmouseout="this.style.transform='translateY(0) rotate(0)'">
-          <div style="background:linear-gradient(135deg,#e91e8c,#6a0dad);border-radius:8px;padding:12px;box-shadow:0 4px 0 #7a0a4a, 0 8px 16px rgba(0,0,0,0.5);position:relative;">
-            <!-- Cassette window -->
-            <div style="background:#0006;border-radius:4px;height:28px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-around;padding:4px;">
-              <div style="width:12px;height:12px;border-radius:50%;background:#111;border:2px solid #333;"></div>
-              <div style="height:2px;flex:1;background:#111;margin:0 4px;border-radius:1px;"></div>
-              <div style="width:12px;height:12px;border-radius:50%;background:#111;border:2px solid #333;"></div>
+        <div class="tape-icon" id="ti-0" onclick="cInsert(0)" title="Insertar">
+          <div class="tape-icon-body" style="background:linear-gradient(135deg,#c0156a,#6a0dad);box-shadow:0 4px 0 #7a0a3a,0 8px 20px rgba(0,0,0,0.6);">
+            <div class="tape-icon-window">
+              <div class="tape-hub"></div>
+              <div class="tape-ribbon"></div>
+              <div class="tape-hub"></div>
             </div>
-            <div style="font-family:'Caveat';font-size:0.95rem;color:#fff;font-weight:700;line-height:1.2;">Hola<br>internet 👋</div>
-            <div style="font-family:'Space Mono';font-size:0.5rem;color:#ffffff77;margin-top:4px;">EP 01 · 2:34</div>
+            <div class="tape-icon-label">Hola<br>internet 👋</div>
+            <div class="tape-icon-ep">EP 01 · 2:34</div>
           </div>
         </div>
 
-        <!-- Cassette 2 -->
-        <div class="cassette-icon" onclick="cassetteInsert(1)"
-          style="cursor:pointer;width:130px;transition:transform 0.2s;" id="ci-1"
-          onmouseover="this.style.transform='translateY(-4px) rotate(-2deg)'" onmouseout="this.style.transform='translateY(0) rotate(0)'">
-          <div style="background:linear-gradient(135deg,#0984e3,#00d2ff);border-radius:8px;padding:12px;box-shadow:0 4px 0 #0560a8, 0 8px 16px rgba(0,0,0,0.5);position:relative;">
-            <div style="background:#0006;border-radius:4px;height:28px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-around;padding:4px;">
-              <div style="width:12px;height:12px;border-radius:50%;background:#111;border:2px solid #333;"></div>
-              <div style="height:2px;flex:1;background:#111;margin:0 4px;border-radius:1px;"></div>
-              <div style="width:12px;height:12px;border-radius:50%;background:#111;border:2px solid #333;"></div>
+        <div class="tape-icon" id="ti-1" onclick="cInsert(1)" title="Insertar">
+          <div class="tape-icon-body" style="background:linear-gradient(135deg,#0560a8,#00b8d9);box-shadow:0 4px 0 #034070,0 8px 20px rgba(0,0,0,0.6);">
+            <div class="tape-icon-window">
+              <div class="tape-hub"></div>
+              <div class="tape-ribbon"></div>
+              <div class="tape-hub"></div>
             </div>
-            <div style="font-family:'Caveat';font-size:0.95rem;color:#fff;font-weight:700;line-height:1.2;">Segundo<br>intento 😅</div>
-            <div style="font-family:'Space Mono';font-size:0.5rem;color:#ffffff77;margin-top:4px;">EP 02 · 1:47</div>
+            <div class="tape-icon-label">Segundo<br>intento 😅</div>
+            <div class="tape-icon-ep">EP 02 · 1:47</div>
           </div>
         </div>
 
-        <!-- Cassette 3 -->
-        <div class="cassette-icon" onclick="cassetteInsert(2)"
-          style="cursor:pointer;width:130px;transition:transform 0.2s;" id="ci-2"
-          onmouseover="this.style.transform='translateY(-4px) rotate(-2deg)'" onmouseout="this.style.transform='translateY(0) rotate(0)'">
-          <div style="background:linear-gradient(135deg,#27ae60,#a8e063);border-radius:8px;padding:12px;box-shadow:0 4px 0 #186a3b, 0 8px 16px rgba(0,0,0,0.5);position:relative;">
-            <div style="background:#0006;border-radius:4px;height:28px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-around;padding:4px;">
-              <div style="width:12px;height:12px;border-radius:50%;background:#111;border:2px solid #333;"></div>
-              <div style="height:2px;flex:1;background:#111;margin:0 4px;border-radius:1px;"></div>
-              <div style="width:12px;height:12px;border-radius:50%;background:#111;border:2px solid #333;"></div>
+        <div class="tape-icon" id="ti-2" onclick="cInsert(2)" title="Insertar">
+          <div class="tape-icon-body" style="background:linear-gradient(135deg,#186a3b,#52be80);box-shadow:0 4px 0 #0e4228,0 8px 20px rgba(0,0,0,0.6);">
+            <div class="tape-icon-window">
+              <div class="tape-hub"></div>
+              <div class="tape-ribbon"></div>
+              <div class="tape-hub"></div>
             </div>
-            <div style="font-family:'Caveat';font-size:0.95rem;color:#fff;font-weight:700;line-height:1.2;">Menos<br>vergüenza 🌱</div>
-            <div style="font-family:'Space Mono';font-size:0.5rem;color:#ffffff77;margin-top:4px;">EP 03 · 3:12</div>
+            <div class="tape-icon-label">Menos<br>vergüenza 🌱</div>
+            <div class="tape-icon-ep">EP 03 · 3:12</div>
           </div>
         </div>
 
       </div>
-    </div><!-- /cassettes -->
+    </div>
 
-  </div><!-- /max-width -->
-
+  </div>
 </section>
 
-<!-- ════════ JAVASCRIPT ════════ -->
+<!-- ══════════════════════ JS ══════════════════════ -->
 <script>
+'use strict';
 
-// ── NAV active state ──
-const allNavLinks = document.querySelectorAll('.main-nav a');
-const allSections = ['pA', 'pB', 'pC'];
-const obs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
-    if (e.isIntersecting) {
-      allNavLinks.forEach(l => l.classList.remove('active'));
-      const link = document.querySelector(`.main-nav a[href="#${e.target.id}"]`);
-      if (link) link.classList.add('active');
+// ── Nav active ──
+const navLinks = document.querySelectorAll('.nav a');
+['pA','pB','pC'].forEach(id => {
+  new IntersectionObserver(entries => {
+    if (entries[0].isIntersecting) {
+      navLinks.forEach(l => l.classList.remove('active'));
+      const l = document.querySelector(`.nav a[href="#${id}"]`);
+      if (l) l.classList.add('active');
     }
-  });
-}, { threshold: 0.4 });
-allSections.forEach(id => { const el = document.getElementById(id); if (el) obs.observe(el); });
+  }, { threshold: 0.5 }).observe(document.getElementById(id));
+});
 
-// ════════════════════════════════
-// WINAMP
-// ════════════════════════════════
-const winampTracks = [
-  { title: 'Hola internet 👋', date: '15 mar 2026', dur: '2:34', durs: 154, bg: 'linear-gradient(135deg,#2d0e4f,#0a0a1a)', marquee: '♫ Hola internet 👋 — Bárbara · 15.03.2026 · 2:34' },
-  { title: 'Segundo intento 😅', date: '22 mar 2026', dur: '1:47', durs: 107, bg: 'linear-gradient(135deg,#0e2a3a,#0a0a1a)', marquee: '♫ Segundo intento 😅 — Bárbara · 22.03.2026 · 1:47' },
-  { title: 'Menos vergüenza', date: '29 mar 2026', dur: '3:12', durs: 192, bg: 'linear-gradient(135deg,#1a3a0e,#0a0a0a)', marquee: '♫ Menos vergüenza — Bárbara · 29.03.2026 · 3:12' },
+// ════════════════════════════════════════════
+// A — WINAMP
+// ════════════════════════════════════════════
+const wTracks = [
+  { title:'Hola internet 👋', date:'15 mar', dur:'2:34', durs:154, bg:'linear-gradient(135deg,#2d0e4f,#0a0a0f)', art:'🌸', color:'#e91e8c', marquee:'♫ Hola internet 👋 — Bárbara · 15.03.2026 · 2:34' },
+  { title:'Segundo intento 😅', date:'22 mar', dur:'1:47', durs:107, bg:'linear-gradient(135deg,#0e2a3a,#05101a)', art:'😅', color:'#0984e3', marquee:'♫ Segundo intento 😅 — Bárbara · 22.03.2026 · 1:47' },
+  { title:'Menos vergüenza 🌱', date:'29 mar', dur:'3:12', durs:192, bg:'linear-gradient(135deg,#1a3a0e,#080f05)', art:'🌱', color:'#27ae60', marquee:'♫ Menos vergüenza — Bárbara · 29.03.2026 · 3:12' },
 ];
-let wCurrentTrack = 0;
-let wPlaying = false;
-let wProgress = 0; // 0-100
-let wInterval = null;
+let wCur = 0, wPlaying = false, wProg = 0, wTimer = null;
 
-function winampSelectTrack(idx) {
-  wCurrentTrack = idx;
-  wProgress = 0;
-  const t = winampTracks[idx];
-  // Update playlist highlight
-  document.querySelectorAll('.wp-track').forEach((el, i) => {
-    el.style.background = i === idx ? '#1a1a1a' : 'transparent';
-    el.style.borderLeft = i === idx ? '3px solid #e91e8c' : '3px solid transparent';
-    el.querySelector('div span:first-child').style.color = i === idx ? '#e91e8c' : '#555';
-    el.querySelectorAll('div')[1].style.color = i === idx ? '#fff' : '#aaa';
-  });
-  // Update video bg
-  document.getElementById('winamp-vid-bg').style.background = t.bg;
-  // Update marquee
-  const m = document.getElementById('winamp-marquee-text');
-  m.textContent = t.marquee + '   ' + t.marquee + '   ';
-  // Update time display
-  document.getElementById('winamp-time-display').textContent = '0:00 / ' + t.dur;
-  updateSeekbar();
+// Build VU bars
+const vizEl = document.getElementById('winamp-viz');
+const vuBars = [];
+for (let i = 0; i < 10; i++) {
+  const b = document.createElement('div');
+  b.className = 'vu-bar' + (i >= 6 ? ' purple' : '');
+  b.style.cssText = 'width:4px;border-radius:1px 1px 0 0;flex-shrink:0;height:10%;transition:height 0.08s ease-out;';
+  b.style.background = i < 6
+    ? 'linear-gradient(to top,#e91e8c,#ff69b4)'
+    : 'linear-gradient(to top,#6a0dad,#a855f7)';
+  vizEl.appendChild(b);
+  vuBars.push(b);
 }
 
-function winampTogglePlay() {
-  wPlaying = !wPlaying;
-  document.getElementById('winamp-playbtn').textContent = wPlaying ? '⏸' : '▶';
-  document.getElementById('winamp-play-icon').textContent = wPlaying ? '⏸' : '▶';
-  // Animate VU bars
-  document.querySelectorAll('.vu-bar').forEach(b => {
-    b.style.animationPlayState = wPlaying ? 'running' : 'paused';
+// VU animation
+let vuFrame;
+function vuAnimate() {
+  if (!wPlaying) { vuBars.forEach(b => b.style.height = '10%'); return; }
+  vuBars.forEach((b, i) => {
+    const h = 10 + Math.random() * 85;
+    b.style.height = h + '%';
   });
-  // Simulate progress
-  clearInterval(wInterval);
+  vuFrame = setTimeout(vuAnimate, 100);
+}
+
+function wRender() {
+  const t = wTracks[wCur];
+  document.getElementById('w-bg').style.background = t.bg;
+  document.getElementById('w-art').textContent = t.art;
+  document.getElementById('w-time').textContent = '0:00 / ' + t.dur;
+  // marquee — duplicate for seamless loop
+  const m = document.getElementById('winamp-marquee');
+  m.textContent = t.marquee + '      ' + t.marquee + '      ';
+
+  document.querySelectorAll('.wpl-track').forEach((el, i) => {
+    el.classList.toggle('active', i === wCur);
+    // update accent color dynamically
+    el.querySelector('.wpl-meta span:first-child').style.color = i === wCur ? wTracks[i].color : '#333';
+  });
+}
+
+function wTogglePlay() {
+  wPlaying = !wPlaying;
+  const shell = document.getElementById('winamp-shell');
+  const screen = document.getElementById('winamp-screen');
+  const btn = document.getElementById('w-playbtn');
+  shell.classList.toggle('playing', wPlaying);
+  screen.classList.toggle('paused', !wPlaying);
+  btn.textContent = wPlaying ? '⏸' : '▶';
+  clearTimeout(vuFrame);
+  vuAnimate();
+
+  clearInterval(wTimer);
   if (wPlaying) {
-    const t = winampTracks[wCurrentTrack];
-    wInterval = setInterval(() => {
-      wProgress += (100 / t.durs);
-      if (wProgress >= 100) { wProgress = 0; winampNext(); return; }
-      updateSeekbar();
-      // Update time
-      const elapsed = Math.floor((wProgress / 100) * t.durs);
-      const m = Math.floor(elapsed / 60);
-      const s = elapsed % 60;
-      document.getElementById('winamp-time-display').textContent = m + ':' + s.toString().padStart(2,'0') + ' / ' + t.dur;
+    const t = wTracks[wCur];
+    wTimer = setInterval(() => {
+      wProg += 100 / t.durs;
+      if (wProg >= 100) { wProg = 0; wNext(); return; }
+      document.getElementById('w-seek-fill').style.width = wProg + '%';
+      document.getElementById('w-seek-thumb').style.left = wProg + '%';
+      const e = Math.floor((wProg / 100) * t.durs);
+      document.getElementById('w-time').textContent = `${Math.floor(e/60)}:${String(e%60).padStart(2,'0')} / ${t.dur}`;
     }, 1000);
   }
 }
-
-function updateSeekbar() {
-  document.getElementById('winamp-seekbar-fill').style.width = wProgress + '%';
-  document.getElementById('winamp-seekbar-thumb').style.left = wProgress + '%';
+function wSeek(e) {
+  const r = document.getElementById('w-seek-track').getBoundingClientRect();
+  wProg = Math.max(0, Math.min(100, (e.clientX - r.left) / r.width * 100));
+  document.getElementById('w-seek-fill').style.width = wProg + '%';
+  document.getElementById('w-seek-thumb').style.left = wProg + '%';
+}
+function wNext() { clearInterval(wTimer); wPlaying = false; wProg = 0; wCur = (wCur+1) % wTracks.length; wRender(); wTogglePlay(); }
+function wPrev() {
+  clearInterval(wTimer); wPlaying = false; wProg = 0;
+  if (wProg < 5) wCur = (wCur - 1 + wTracks.length) % wTracks.length;
+  wRender(); wTogglePlay();
+}
+function wSelect(i) { clearInterval(wTimer); wPlaying = false; wProg = 0; wCur = i; wRender(); wTogglePlay(); }
+function wVol(e, bar) {
+  const r = bar.getBoundingClientRect();
+  document.getElementById('w-vol').style.width = Math.max(0, Math.min(100, (e.clientX - r.left) / r.width * 100)) + '%';
 }
 
-function winampSeek(e) {
-  const bar = document.getElementById('winamp-seekbar-track');
-  const rect = bar.getBoundingClientRect();
-  wProgress = Math.max(0, Math.min(100, (e.clientX - rect.left) / rect.width * 100));
-  updateSeekbar();
-}
+wRender();
+// Autoplay after short delay
+setTimeout(() => wTogglePlay(), 700);
 
-function winampNext() {
-  clearInterval(wInterval);
-  wPlaying = false;
-  winampSelectTrack((wCurrentTrack + 1) % winampTracks.length);
-  winampTogglePlay();
-}
-function winampPrev() {
-  clearInterval(wInterval);
-  wPlaying = false;
-  if (wProgress > 10) { wProgress = 0; updateSeekbar(); winampTogglePlay(); return; }
-  winampSelectTrack((wCurrentTrack - 1 + winampTracks.length) % winampTracks.length);
-  winampTogglePlay();
-}
+// Drag titlebar
+(function() {
+  const bar = document.getElementById('winamp-titlebar');
+  const shell = document.getElementById('winamp-shell');
+  let dragging = false, sx, sy, ox, oy;
+  bar.addEventListener('mousedown', e => {
+    dragging = true; sx = e.clientX; sy = e.clientY;
+    const r = shell.getBoundingClientRect();
+    ox = r.left; oy = r.top;
+    shell.style.position = 'fixed';
+    shell.style.margin = '0';
+    shell.style.left = ox + 'px';
+    shell.style.top = oy + 'px';
+    e.preventDefault();
+  });
+  document.addEventListener('mousemove', e => {
+    if (!dragging) return;
+    shell.style.left = (ox + e.clientX - sx) + 'px';
+    shell.style.top = (oy + e.clientY - sy) + 'px';
+  });
+  document.addEventListener('mouseup', () => { dragging = false; });
+})();
 
-function winampVolumeClick(e, bar) {
-  const rect = bar.getBoundingClientRect();
-  const pct = Math.max(0, Math.min(100, (e.clientX - rect.left) / rect.width * 100));
-  document.getElementById('winamp-vol-fill').style.width = pct + '%';
-}
+// ════════════════════════════════════════════
+// B — QUIOSCO
+// ════════════════════════════════════════════
+const qEps = [
+  { title:'Hola internet 👋', ep:'EP 01', dur:'2:34', durs:154,
+    bg:'linear-gradient(160deg,#1a0630,#4a0890,#c0157a)',
+    note:'"Estaba tan nerviosa que casi no lo subo. Pero aquí está."' },
+  { title:'Segundo intento 😅', ep:'EP 02', dur:'1:47', durs:107,
+    bg:'linear-gradient(160deg,#040e20,#0560a8,#00b8d9)',
+    note:'"Menos temblores. Me grabé 8 veces antes de elegir una."' },
+  { title:'Menos vergüenza 🌱', ep:'EP 03', dur:'3:12', durs:192,
+    bg:'linear-gradient(160deg,#050f08,#186a3b,#52be80)',
+    note:'"¿Lo notáis? Creo que algo está cambiando."' },
+];
+let qCurrent = 0, qSeekTimer = null;
 
-// Keyboard for winamp
-document.addEventListener('keydown', e => {
-  const rect = document.getElementById('pA').getBoundingClientRect();
-  if (rect.top < window.innerHeight * 0.5 && rect.bottom > 0) {
-    if (e.key === ' ') { e.preventDefault(); winampTogglePlay(); }
-    if (e.key === 'ArrowRight') { e.preventDefault(); winampNext(); }
-    if (e.key === 'ArrowLeft') { e.preventDefault(); winampPrev(); }
-  }
-  if (e.key === 'Escape') quioscoClose();
+// Build ep dots
+const stripEl = document.getElementById('q-ep-strip');
+qEps.forEach((ep, i) => {
+  const d = document.createElement('div');
+  d.className = 'q-ep-dot' + (i === 0 ? ' active' : '');
+  d.textContent = ['🌸','😅','🌱'][i];
+  d.style.background = ['#3d0060','#034070','#0e4228'][i];
+  d.style.borderRadius = '6px';
+  d.onclick = () => qOpen(i);
+  stripEl.appendChild(d);
 });
 
-// Start playing on load
-setTimeout(() => { winampTogglePlay(); }, 600);
-
-// ════════════════════════════════
-// QUIOSCO
-// ════════════════════════════════
-let currentQuiosco = 0;
-const quioscoEps = [
-  { title: 'Hola internet 👋', ep: 'EP 01', bg: 'linear-gradient(135deg,#2d0e4f,#1a0a2e)', dur: '2:34' },
-  { title: 'Segundo intento 😅', ep: 'EP 02', bg: 'linear-gradient(135deg,#0e2a3a,#0a1628)', dur: '1:47' },
-  { title: 'Menos vergüenza 🌱', ep: 'EP 03', bg: 'linear-gradient(135deg,#1a3a0e,#0a1a08)', dur: '3:12' },
-];
-
-function quioscoOpen(idx) {
-  currentQuiosco = idx;
-  const ep = quioscoEps[idx];
-  document.getElementById('q-player-title').textContent = ep.title;
+function qOpen(idx) {
+  qCurrent = idx;
+  const ep = qEps[idx];
+  document.getElementById('q-player-bg').style.background = ep.bg;
   document.getElementById('q-ep-badge').textContent = ep.ep;
-  document.getElementById('q-video-bg').style.background = ep.bg;
-  document.getElementById('q-time').textContent = '0:00 / ' + ep.dur;
-  document.getElementById('q-seekbar').style.width = '0%';
+  document.getElementById('q-player-title').textContent = ep.title;
+  document.getElementById('q-player-note').textContent = ep.note;
+  document.getElementById('q-time-label').textContent = '0:00 / ' + ep.dur;
 
-  const grid = document.getElementById('quiosco-grid');
-  const player = document.getElementById('quiosco-player');
-  grid.style.opacity = '0';
-  grid.style.transform = 'scale(0.96)';
-  grid.style.pointerEvents = 'none';
+  // ep dots
+  document.querySelectorAll('.q-ep-dot').forEach((d, i) => d.classList.toggle('active', i === idx));
+
+  // show player
+  document.getElementById('q-grid').style.opacity = '0';
+  document.getElementById('q-grid').style.transform = 'scale(0.97)';
+  document.getElementById('q-grid').style.pointerEvents = 'none';
+  const player = document.getElementById('q-player');
   player.style.opacity = '1';
   player.style.pointerEvents = 'all';
-  player.style.animation = 'fadeInScale 0.4s ease';
 
-  // Simulate seek progress
-  let prog = 0;
-  clearInterval(window._qInterval);
-  window._qInterval = setInterval(() => {
-    prog += 0.3;
-    if (prog > 100) { clearInterval(window._qInterval); return; }
-    document.getElementById('q-seekbar').style.width = prog + '%';
-  }, 100);
+  // animate seekbar
+  clearInterval(qSeekTimer);
+  let p = 0;
+  document.getElementById('q-seek-fill').style.width = '0%';
+  document.getElementById('q-seek-thumb').style.left = '0%';
+  qSeekTimer = setInterval(() => {
+    p += 100 / ep.durs;
+    if (p > 100) { clearInterval(qSeekTimer); return; }
+    document.getElementById('q-seek-fill').style.width = p + '%';
+    document.getElementById('q-seek-thumb').style.left = p + '%';
+    const e2 = Math.floor((p / 100) * ep.durs);
+    document.getElementById('q-time-label').textContent = `${Math.floor(e2/60)}:${String(e2%60).padStart(2,'0')} / ${ep.dur}`;
+  }, 1000);
 }
 
-function quioscoClose() {
-  const grid = document.getElementById('quiosco-grid');
-  const player = document.getElementById('quiosco-player');
-  clearInterval(window._qInterval);
-  player.style.opacity = '0';
-  player.style.pointerEvents = 'none';
-  grid.style.opacity = '1';
-  grid.style.transform = 'scale(1)';
-  grid.style.pointerEvents = 'all';
+function qClose() {
+  clearInterval(qSeekTimer);
+  document.getElementById('q-player').style.opacity = '0';
+  document.getElementById('q-player').style.pointerEvents = 'none';
+  document.getElementById('q-grid').style.opacity = '1';
+  document.getElementById('q-grid').style.transform = 'scale(1)';
+  document.getElementById('q-grid').style.pointerEvents = 'all';
 }
 
-// ════════════════════════════════
-// CASSETTE
-// ════════════════════════════════
-const cassetteTapes = [
-  { title: 'Hola internet 👋', sub: 'EP 01 · 15 mar 2026', dur: '2:34', durs: 154, bg: 'linear-gradient(135deg,#e91e8c,#6a0dad)', shadow: '#7a0a4a' },
-  { title: 'Segundo intento 😅', sub: 'EP 02 · 22 mar 2026', dur: '1:47', durs: 107, bg: 'linear-gradient(135deg,#0984e3,#00d2ff)', shadow: '#0560a8' },
-  { title: 'Menos vergüenza 🌱', sub: 'EP 03 · 29 mar 2026', dur: '3:12', durs: 192, bg: 'linear-gradient(135deg,#27ae60,#a8e063)', shadow: '#186a3b' },
+// ════════════════════════════════════════════
+// C — CASSETTE
+// ════════════════════════════════════════════
+const cTapes = [
+  { label:'Hola internet 👋', sub:'EP 01 · 15 mar 2026', dur:'2:34', durs:154,
+    bg:'linear-gradient(135deg,#c0156a,#6a0dad)', gauge:'rgba(255,180,220,0.6)' },
+  { label:'Segundo intento 😅', sub:'EP 02 · 22 mar 2026', dur:'1:47', durs:107,
+    bg:'linear-gradient(135deg,#0560a8,#00b8d9)', gauge:'rgba(150,220,255,0.6)' },
+  { label:'Menos vergüenza 🌱', sub:'EP 03 · 29 mar 2026', dur:'3:12', durs:192,
+    bg:'linear-gradient(135deg,#186a3b,#52be80)', gauge:'rgba(150,255,180,0.6)' },
 ];
-let cCurrentTape = null;
-let cPlaying = false;
-let cProgress = 0;
-let cInterval = null;
-let cReelAnim = null;
+let cCur = null, cPlaying = false, cProg = 0, cTimer = null, cLcdFrame = null;
 
-function cassetteInsert(idx) {
-  // If same tape already in, do nothing
-  if (cCurrentTape === idx) return;
-  // If another tape is in, eject first
-  if (cCurrentTape !== null) {
-    cassetteBtn('stop');
-    cassetteEjectAnimation().then(() => doInsert(idx));
+// Build LCD VU bars
+const lcdVu = document.getElementById('lcd-vu');
+const lcdBars = [];
+for (let i = 0; i < 12; i++) {
+  const b = document.createElement('div');
+  b.className = 'lcd-bar';
+  b.style.cssText = 'width:4px;border-radius:1px;height:20%;transition:height 0.1s ease-out;flex-shrink:0;';
+  b.style.background = '#00ff41';
+  b.style.boxShadow = '0 0 3px #00ff4144';
+  lcdVu.appendChild(b);
+  lcdBars.push(b);
+}
+
+function lcdVuAnimate() {
+  if (!cPlaying) { lcdBars.forEach(b => b.style.height = '20%'); return; }
+  lcdBars.forEach(b => { b.style.height = (15 + Math.random() * 80) + '%'; });
+  cLcdFrame = setTimeout(lcdVuAnimate, 120);
+}
+
+function cInsert(idx) {
+  if (cCur === idx) return;
+  if (cCur !== null) {
+    cBtn('stop');
+    // Eject current visually
+    const st = document.getElementById('slot-tape');
+    st.style.animation = 'tape-eject 0.3s ease forwards';
+    setTimeout(() => {
+      st.style.display = 'none';
+      st.style.animation = '';
+      document.getElementById('slot-empty').style.display = 'block';
+      document.getElementById(`ti-${cCur}`).classList.remove('inserted');
+      cCur = null;
+      doInsert(idx);
+    }, 300);
   } else {
     doInsert(idx);
   }
 }
 
-function cassetteEjectAnimation() {
-  return new Promise(resolve => {
-    const slot = document.getElementById('slot-cassette');
-    slot.style.animation = 'eject-out 0.3s ease forwards';
-    setTimeout(() => {
-      document.getElementById('slot-cassette').style.display = 'none';
-      document.getElementById('slot-empty').style.display = 'block';
-      cCurrentTape = null;
-      document.getElementById('lcd-track').textContent = 'SIN CINTA';
-      document.getElementById('lcd-time').textContent = '0:00';
-      document.getElementById('lcd-status').textContent = '■ STOP';
-      slot.style.animation = '';
-      resolve();
-    }, 300);
-  });
-}
-
 function doInsert(idx) {
-  cCurrentTape = idx;
-  cProgress = 0;
-  const tape = cassetteTapes[idx];
-  // Update slot
+  cCur = idx;
+  const tape = cTapes[idx];
   document.getElementById('slot-empty').style.display = 'none';
-  const slotBody = document.getElementById('slot-cassette-body');
-  slotBody.style.background = tape.bg;
-  document.getElementById('slot-cassette-label').textContent = tape.title;
-  document.getElementById('slot-cassette-sub').textContent = tape.sub;
-  document.getElementById('slot-cassette').style.display = 'block';
-  document.getElementById('slot-cassette').style.animation = 'eject-in 0.4s ease';
-  // Update LCD
-  document.getElementById('lcd-track').textContent = tape.title;
+  const stBody = document.getElementById('slot-tape-body');
+  stBody.style.background = tape.bg;
+  document.getElementById('slot-tape-label').textContent = tape.label;
+  document.getElementById('slot-tape-sub').textContent = tape.sub;
+  document.getElementById('tape-gauge').style.background = tape.gauge;
+  document.getElementById('tape-gauge').style.width = '0%';
+  const st = document.getElementById('slot-tape');
+  st.style.display = 'block';
+  st.style.animation = 'tape-insert 0.4s cubic-bezier(0.34,1.3,0.64,1)';
+  document.getElementById('lcd-track').textContent = tape.label;
   document.getElementById('lcd-time').textContent = '0:00';
   document.getElementById('lcd-status').textContent = '■ STOP';
+  document.getElementById(`ti-${idx}`).classList.add('inserted');
+  cProg = 0;
 }
 
-function cassetteBtn(action) {
+function cBtn(action) {
   if (action === 'play') {
-    if (cCurrentTape === null) {
+    if (cCur === null) {
       document.getElementById('lcd-track').textContent = 'PON UNA CINTA';
+      setTimeout(() => document.getElementById('lcd-track').textContent = 'SIN CINTA ◇', 1500);
       return;
     }
     if (!cPlaying) {
       cPlaying = true;
       document.getElementById('lcd-status').textContent = '▶ PLAY';
-      document.getElementById('cassette-play-btn').textContent = '⏸ PAUSE';
-      // Spin reels
-      document.getElementById('reel-left').style.animation = 'reel-spin 2s linear infinite';
-      document.getElementById('reel-right').style.animation = 'reel-spin 1.8s linear infinite reverse';
-      // Progress
-      const tape = cassetteTapes[cCurrentTape];
-      clearInterval(cInterval);
-      cInterval = setInterval(() => {
-        cProgress += (100 / tape.durs);
-        if (cProgress >= 100) { cassetteBtn('stop'); return; }
-        const elapsed = Math.floor((cProgress / 100) * tape.durs);
-        const m = Math.floor(elapsed / 60);
-        const s = elapsed % 60;
-        document.getElementById('lcd-time').textContent = m + ':' + s.toString().padStart(2,'0');
+      document.getElementById('c-play-btn').textContent = '⏸ PAUSE';
+      document.getElementById('cassette-device').classList.add('playing');
+      document.getElementById('reel-l').classList.add('spinning');
+      document.getElementById('reel-r').classList.add('spinning-r');
+      clearTimeout(cLcdFrame); lcdVuAnimate();
+      const tape = cTapes[cCur];
+      clearInterval(cTimer);
+      cTimer = setInterval(() => {
+        cProg += 100 / tape.durs;
+        if (cProg >= 100) { cBtn('stop'); return; }
+        const e = Math.floor((cProg / 100) * tape.durs);
+        document.getElementById('lcd-time').textContent = `${Math.floor(e/60)}:${String(e%60).padStart(2,'0')}`;
+        document.getElementById('tape-gauge').style.width = cProg + '%';
       }, 1000);
     } else {
       cPlaying = false;
+      clearInterval(cTimer); clearTimeout(cLcdFrame);
       document.getElementById('lcd-status').textContent = '⏸ PAUSE';
-      document.getElementById('cassette-play-btn').textContent = '▶ PLAY';
-      document.getElementById('reel-left').style.animation = 'none';
-      document.getElementById('reel-right').style.animation = 'none';
-      clearInterval(cInterval);
+      document.getElementById('c-play-btn').textContent = '▶ PLAY';
+      document.getElementById('cassette-device').classList.remove('playing');
+      document.getElementById('reel-l').classList.remove('spinning');
+      document.getElementById('reel-r').classList.remove('spinning-r');
+      lcdVuAnimate();
     }
   } else if (action === 'stop') {
-    cPlaying = false;
-    cProgress = 0;
-    clearInterval(cInterval);
+    if (cCur === null) return;
+    cPlaying = false; cProg = 0;
+    clearInterval(cTimer); clearTimeout(cLcdFrame);
     document.getElementById('lcd-status').textContent = '■ STOP';
     document.getElementById('lcd-time').textContent = '0:00';
-    document.getElementById('cassette-play-btn').textContent = '▶ PLAY';
-    document.getElementById('reel-left').style.animation = 'none';
-    document.getElementById('reel-right').style.animation = 'none';
+    document.getElementById('c-play-btn').textContent = '▶ PLAY';
+    document.getElementById('cassette-device').classList.remove('playing');
+    document.getElementById('reel-l').classList.remove('spinning');
+    document.getElementById('reel-r').classList.remove('spinning-r');
+    document.getElementById('tape-gauge').style.width = '0%';
+    lcdVuAnimate();
   } else if (action === 'rew') {
-    if (cCurrentTape === null) return;
-    cProgress = 0;
-    document.getElementById('lcd-time').textContent = '0:00';
+    if (cCur === null) return;
     document.getElementById('lcd-status').textContent = '⏮ REW';
-    setTimeout(() => {
-      if (!cPlaying) document.getElementById('lcd-status').textContent = '■ STOP';
-    }, 600);
+    cProg = 0; document.getElementById('lcd-time').textContent = '0:00';
+    document.getElementById('tape-gauge').style.width = '0%';
+    setTimeout(() => { if (!cPlaying) document.getElementById('lcd-status').textContent = '■ STOP'; }, 700);
   } else if (action === 'ff') {
-    if (cCurrentTape === null) return;
+    if (cCur === null) return;
     document.getElementById('lcd-status').textContent = '⏭ FF';
-    setTimeout(() => {
-      cProgress = 99;
-      if (!cPlaying) document.getElementById('lcd-status').textContent = '■ STOP';
-    }, 600);
+    const tape = cTapes[cCur];
+    cProg = 95; document.getElementById('lcd-time').textContent = tape.dur.replace(':', ':') ;
+    document.getElementById('tape-gauge').style.width = '95%';
+    setTimeout(() => { if (!cPlaying) document.getElementById('lcd-status').textContent = '■ STOP'; }, 700);
   } else if (action === 'eject') {
-    if (cCurrentTape === null) return;
-    cassetteBtn('stop');
-    cassetteEjectAnimation();
+    if (cCur === null) return;
+    cBtn('stop');
+    const st = document.getElementById('slot-tape');
+    st.style.animation = 'tape-eject 0.35s ease forwards';
+    setTimeout(() => {
+      st.style.display = 'none';
+      st.style.animation = '';
+      document.getElementById('slot-empty').style.display = 'block';
+      document.getElementById('lcd-track').textContent = 'SIN CINTA ◇';
+      document.getElementById('lcd-time').textContent = '0:00';
+      document.getElementById('lcd-status').textContent = '■ STOP';
+      if (cCur !== null) document.getElementById(`ti-${cCur}`).classList.remove('inserted');
+      cCur = null;
+    }, 350);
   }
 }
 
+// Keyboard support
+document.addEventListener('keydown', e => {
+  const aRect = document.getElementById('pA').getBoundingClientRect();
+  const bRect = document.getElementById('pB').getBoundingClientRect();
+  if (aRect.top < window.innerHeight * 0.6 && aRect.bottom > 0) {
+    if (e.key === ' ') { e.preventDefault(); wTogglePlay(); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); wNext(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); wPrev(); }
+  }
+  if (e.key === 'Escape') qClose();
+});
 </script>
-
 </body>
 </html>
