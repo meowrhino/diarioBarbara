@@ -12,29 +12,26 @@
 
   <div class="wallpaper"></div>
 
+  <!-- escritorio: solo iconos, sin taskbar -->
   <div class="desktop" id="desktop">
     <div class="icons-area" id="icons-area"></div>
-    <div class="taskbar">
-      <button class="start-btn">
-        <span class="start-icon">🌸</span> barbara
-      </button>
-      <div class="task-items">
-        <div class="task-item" id="task-item">💬 Barbara</div>
-      </div>
-      <div class="taskbar-spacer"></div>
-      <div class="tray">
-        <span class="tray-clock" id="clock"></span>
-      </div>
-    </div>
   </div>
 
+  <!-- ventana de chat -->
   <div class="chat-window" id="chat-window">
     <div class="chat-frame">
+      <div class="win-titlebar">
+        <span class="win-titlebar-icon">💬</span>
+        <span class="win-titlebar-text">
+          <span id="win-title-name">Barbara</span> —
+          <span class="win-titlebar-status" id="chat-status">en linea</span>
+        </span>
+        <div class="win-btn-close" id="win-close">✕</div>
+      </div>
       <div class="chat-body" id="chat-body"></div>
     </div>
   </div>
 
-  <script src="js/clock.js"></script>
   <script src="js/desktop.js"></script>
   <script src="js/chat.js"></script>
 </body>

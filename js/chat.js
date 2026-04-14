@@ -1,12 +1,16 @@
-/* Ventana de chat */
+/* ═══════════════════════════════
+   Chat — carga datos, renderiza mensajes, controla ventana
+═══════════════════════════════ */
 const chatWindow = document.getElementById('chat-window');
+const winClose = document.getElementById('win-close');
+const winTitleName = document.getElementById('win-title-name');
 const chatBody = document.getElementById('chat-body');
-const taskItem = document.getElementById('task-item');
+const chatStatus = document.getElementById('chat-status');
 
 let timeouts = [];
 let chatData = null;
 
-/* Cargar datos y arrancar */
+/* ── cargar datos ── */
 fetch('data.json')
   .then(r => r.json())
   .then(data => {
@@ -15,7 +19,7 @@ fetch('data.json')
     if (data.chats.length > 0) openChat(data.chats.length - 1);
   });
 
-/* Abrir un chat */
+/* ── abrir un chat ── */
 function openChat(idx) {
   const chat = chatData.chats[idx];
   if (!chat) return;
@@ -24,14 +28,15 @@ function openChat(idx) {
   timeouts = [];
   chatBody.innerHTML = '';
 
-  taskItem.textContent = '\u{1F4AC} ' + chat.titulo;
-  taskItem.classList.add('visible', 'active');
+  winTitleName.textContent = chat.titulo;
   chatWindow.classList.add('open');
+  chatStatus.textContent = 'escribiendo...';
 
   let delay = 400;
   const msgs = chat.chat;
 
   msgs.forEach((msg, i) => {
+    /* mostrar indicador de "escribiendo" antes de mensajes de Barbara */
     if (msg.emisor === 1 && i > 0) {
       timeouts.push(setTimeout(() => showTyping(), delay));
       delay += 700;
@@ -39,26 +44,30 @@ function openChat(idx) {
     timeouts.push(setTimeout(() => {
       removeTyping();
       renderMessage(msg);
+      /* actualizar estado según el siguiente mensaje */
+      if (i === msgs.length - 1) {
+        chatStatus.textContent = 'en linea';
+      } else if (msgs[i + 1] && msgs[i + 1].emisor === 1) {
+        chatStatus.textContent = 'escribiendo...';
+      } else {
+        chatStatus.textContent = 'en linea';
+      }
     }, delay));
     delay += (typeof msg.contenido === 'string') ? 1600 : 1000;
   });
 }
 
-/* Cerrar chat */
+/* ── cerrar chat ── */
 function closeChat() {
   chatWindow.classList.remove('open');
-  taskItem.classList.remove('visible', 'active');
   timeouts.forEach(clearTimeout);
   timeouts = [];
 }
 
-taskItem.addEventListener('click', () => {
-  if (chatWindow.classList.contains('open')) closeChat();
-  else chatWindow.classList.add('open');
-});
+winClose.addEventListener('click', closeChat);
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeChat(); });
 
-/* Renderizar un mensaje */
+/* ── renderizar mensaje ── */
 function renderMessage(msg) {
   const isVideo = typeof msg.contenido === 'string' && /\.(webm|mp4)$/i.test(msg.contenido);
   const isBarb = msg.emisor === 1;
@@ -76,6 +85,7 @@ function renderMessage(msg) {
         </div>
       </div>`;
     addMsg(el);
+    /* click para play/pause */
     setTimeout(() => {
       const box = document.getElementById(id);
       if (!box) return;
@@ -99,15 +109,16 @@ function renderMessage(msg) {
   }
 }
 
+/* ── añadir mensaje al DOM con animación ── */
 function addMsg(el) {
   el.classList.add('msg-enter');
   chatBody.appendChild(el);
-  el.offsetHeight; // force reflow
+  el.offsetHeight; // forzar reflow para la animación
   el.classList.add('msg-enter-active');
   chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: 'smooth' });
 }
 
-/* Indicador de "escribiendo..." */
+/* ── indicador de "escribiendo..." ── */
 function showTyping() {
   removeTyping();
   const el = document.createElement('div');

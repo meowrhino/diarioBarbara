@@ -1,23 +1,39 @@
 /* ═══════════════════════════════
+   FUENTES — Tahoma (Windows XP system font)
+   Trebuchet MS para títulos de ventana
+═══════════════════════════════ */
+@font-face {
+  font-family: 'Tahoma';
+  src: url('../assets/fonts/tahoma.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Tahoma';
+  src: url('../assets/fonts/tahoma-bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ═══════════════════════════════
    RESET & BASE
 ═══════════════════════════════ */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html, body { height: 100%; overflow: hidden; user-select: none; }
 body {
-  font-family: Tahoma, 'Segoe UI', Geneva, Verdana, sans-serif;
+  font-family: 'Tahoma', 'Segoe UI', Geneva, Verdana, sans-serif;
   background: #3a6ea5;
   color: #1a1a1a;
 }
 
 /* ═══════════════════════════════
-   WALLPAPER
+   WALLPAPER — Windows XP Bliss
 ═══════════════════════════════ */
 .wallpaper {
   position: fixed; inset: 0; z-index: 0;
-  background-image: url('../assets/images/bliss.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background: url('../assets/images/bliss.jpg') center / cover no-repeat;
 }
 
 /* ═══════════════════════════════
@@ -28,7 +44,7 @@ body {
   display: flex; flex-direction: column;
 }
 
-/* ── icons ── */
+/* ── iconos del escritorio ── */
 .icons-area {
   flex: 1;
   display: flex;
@@ -53,7 +69,7 @@ body {
   border-color: rgba(0,0,128,0.25);
   border-style: dotted;
 }
-.desktop-icon:active .icon-emoji { transform: scale(0.9); }
+.desktop-icon:active .icon-emoji,
 .desktop-icon:active .icon-img { transform: scale(0.9); }
 .desktop-icon.selected {
   background: rgba(0,0,128,0.25);
@@ -74,7 +90,6 @@ body {
   transition: transform 0.1s;
 }
 .icon-label {
-  font-family: Tahoma, sans-serif;
   font-size: 8px;
   font-weight: 700;
   color: #fff;
@@ -83,71 +98,6 @@ body {
   line-height: 1.2;
   max-width: 72px;
   word-wrap: break-word;
-}
-
-/* ═══════════════════════════════
-   TASKBAR
-═══════════════════════════════ */
-.taskbar {
-  flex-shrink: 0;
-  display: flex; align-items: center; gap: 4px;
-  padding: 2px 4px;
-  background: linear-gradient(180deg, #3169b3 0%, #2456a1 30%, #1e4d97 60%, #245dac 100%);
-  border-top: 1px solid #5c9ad6;
-  min-height: 30px;
-}
-.start-btn {
-  display: flex; align-items: center; gap: 3px;
-  padding: 2px 10px 2px 3px;
-  background: linear-gradient(180deg, #42a346 0%, #328e36 40%, #257a29 70%, #2d9631 100%);
-  border: none;
-  border-radius: 0 8px 8px 0;
-  cursor: pointer;
-  color: #fff;
-  font-family: Tahoma, sans-serif;
-  font-size: 11px;
-  font-weight: 700;
-  font-style: italic;
-  text-shadow: 1px 1px 1px rgba(0,0,0,0.5);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 1px 2px rgba(0,0,0,0.3);
-}
-.start-btn:active { box-shadow: inset 0 1px 3px rgba(0,0,0,0.4); }
-.start-icon { font-size: 15px; line-height: 1; }
-
-.taskbar-spacer { flex: 1; }
-
-.task-items { display: flex; gap: 2px; }
-.task-item {
-  padding: 2px 8px;
-  background: linear-gradient(180deg, #3c7ec2 0%, #2a5fa0 100%);
-  border: 1px solid rgba(255,255,255,0.1);
-  font-family: Tahoma, sans-serif;
-  font-size: 9px;
-  font-weight: 700;
-  color: #fff;
-  cursor: pointer;
-  max-width: 140px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  display: none;
-}
-.task-item.visible { display: block; }
-.task-item.active {
-  background: linear-gradient(180deg, #2a5fa0 0%, #1e4888 100%);
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.3);
-}
-
-.tray {
-  display: flex; align-items: center; gap: 6px;
-  padding: 1px 8px;
-  background: linear-gradient(180deg, #1a5098 0%, #0f3d7a 100%);
-  border-left: 1px solid rgba(255,255,255,0.1);
-}
-.tray-clock {
-  font-family: Tahoma, sans-serif;
-  font-size: 11px;
-  color: #fff;
 }
 
 /* ═══════════════════════════════
