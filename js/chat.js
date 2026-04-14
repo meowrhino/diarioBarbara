@@ -2,6 +2,8 @@
    Chat — carga datos, renderiza mensajes, controla ventana
 ═══════════════════════════════ */
 const chatWindow = document.getElementById('chat-window');
+const chatFrame = document.querySelector('.chat-frame');
+const winTitlebar = document.querySelector('.win-titlebar');
 const winClose = document.getElementById('win-close');
 const winTitleName = document.getElementById('win-title-name');
 const chatBody = document.getElementById('chat-body');
@@ -10,7 +12,35 @@ const chatStatus = document.getElementById('chat-status');
 let timeouts = [];
 let chatData = null;
 
-/* ── cargar datos ── */
+/* ═══════════════════════════════
+   Drag — arrastrar ventana desde el header
+═══════════════════════════════ */
+let isDragging = false;
+let dragOffset = { x: 0, y: 0 };
+
+winTitlebar.addEventListener('mousedown', (e) => {
+  if (e.target.closest('.win-btn-close')) return;
+  isDragging = true;
+  const rect = chatFrame.getBoundingClientRect();
+  dragOffset.x = e.clientX - rect.left;
+  dragOffset.y = e.clientY - rect.top;
+  chatFrame.classList.add('dragged');
+  e.preventDefault();
+});
+
+document.addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
+  const x = Math.max(0, Math.min(e.clientX - dragOffset.x, window.innerWidth - 60));
+  const y = Math.max(0, Math.min(e.clientY - dragOffset.y, window.innerHeight - 40));
+  chatFrame.style.left = x + 'px';
+  chatFrame.style.top = y + 'px';
+});
+
+document.addEventListener('mouseup', () => { isDragging = false; });
+
+/* ═══════════════════════════════
+   Datos — cargar y arrancar
+═══════════════════════════════ */
 fetch('data.json')
   .then(r => r.json())
   .then(data => {
@@ -28,6 +58,11 @@ function openChat(idx) {
   timeouts = [];
   chatBody.innerHTML = '';
 
+  /* resetear posición al centro */
+  chatFrame.classList.remove('dragged');
+  chatFrame.style.left = '';
+  chatFrame.style.top = '';
+
   winTitleName.textContent = chat.titulo;
   chatWindow.classList.add('open');
   chatStatus.textContent = 'escribiendo...';
@@ -36,7 +71,6 @@ function openChat(idx) {
   const msgs = chat.chat;
 
   msgs.forEach((msg, i) => {
-    /* mostrar indicador de "escribiendo" antes de mensajes de Barbara */
     if (msg.emisor === 1 && i > 0) {
       timeouts.push(setTimeout(() => showTyping(), delay));
       delay += 700;
@@ -44,7 +78,6 @@ function openChat(idx) {
     timeouts.push(setTimeout(() => {
       removeTyping();
       renderMessage(msg);
-      /* actualizar estado según el siguiente mensaje */
       if (i === msgs.length - 1) {
         chatStatus.textContent = 'en linea';
       } else if (msgs[i + 1] && msgs[i + 1].emisor === 1) {
@@ -67,7 +100,11 @@ function closeChat() {
 winClose.addEventListener('click', closeChat);
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeChat(); });
 
-/* ── renderizar mensaje ── */
+/* ═══════════════════════════════
+   Renderizar mensajes
+═══════════════════════════════ */
+const FULLSCREEN_SVG = `<svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>`;
+
 function renderMessage(msg) {
   const isVideo = typeof msg.contenido === 'string' && /\.(webm|mp4)$/i.test(msg.contenido);
   const isBarb = msg.emisor === 1;
@@ -82,20 +119,11 @@ function renderMessage(msg) {
         <div class="video-box" id="${id}">
           <video src="${msg.contenido}" preload="metadata" playsinline></video>
           <div class="vid-overlay"><div class="vid-play"></div></div>
+          <button class="vid-fullscreen" title="Pantalla completa">${FULLSCREEN_SVG}</button>
         </div>
       </div>`;
     addMsg(el);
-    /* click para play/pause */
-    setTimeout(() => {
-      const box = document.getElementById(id);
-      if (!box) return;
-      const v = box.querySelector('video');
-      const o = box.querySelector('.vid-overlay');
-      box.onclick = () => {
-        v.paused ? (v.play(), o.style.opacity = '0') : (v.pause(), o.style.opacity = '1');
-      };
-      v.onended = () => { o.style.opacity = '1'; };
-    }, 50);
+    setTimeout(() => bindVideo(id), 50);
   } else {
     const ps = Array.isArray(msg.contenido) ? msg.contenido : [msg.contenido];
     const el = document.createElement('div');
@@ -109,16 +137,46 @@ function renderMessage(msg) {
   }
 }
 
+/* ── vincular eventos de video (play/pause + fullscreen) ── */
+function bindVideo(id) {
+  const box = document.getElementById(id);
+  if (!box) return;
+  const v = box.querySelector('video');
+  const o = box.querySelector('.vid-overlay');
+  const fs = box.querySelector('.vid-fullscreen');
+
+  /* click en overlay → play/pause */
+  o.onclick = (e) => {
+    e.stopPropagation();
+    v.paused ? (v.play(), o.style.opacity = '0') : (v.pause(), o.style.opacity = '1');
+  };
+  v.onclick = (e) => {
+    e.stopPropagation();
+    v.paused ? (v.play(), o.style.opacity = '0') : (v.pause(), o.style.opacity = '1');
+  };
+  v.onended = () => { o.style.opacity = '1'; };
+
+  /* botón fullscreen */
+  fs.onclick = (e) => {
+    e.stopPropagation();
+    if (v.requestFullscreen) v.requestFullscreen();
+    else if (v.webkitRequestFullscreen) v.webkitRequestFullscreen();
+    else if (v.webkitEnterFullscreen) v.webkitEnterFullscreen(); // iOS
+  };
+}
+
 /* ── añadir mensaje al DOM con animación ── */
 function addMsg(el) {
   el.classList.add('msg-enter');
   chatBody.appendChild(el);
-  el.offsetHeight; // forzar reflow para la animación
+  el.offsetHeight; // forzar reflow
   el.classList.add('msg-enter-active');
   chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: 'smooth' });
 }
 
-/* ── indicador de "escribiendo..." ── */
+/* ═══════════════════════════════
+   Indicador de "escribiendo..."
+═══════════════════════════════ */
 function showTyping() {
   removeTyping();
   const el = document.createElement('div');
