@@ -44,8 +44,9 @@ document.addEventListener('mouseup', () => { isDragging = false; });
 ═══════════════════════════════ */
 fetch('data.json')
   .then(r => r.json())
-  .then(data => {
+  .then(async data => {
     chatData = data;
+    await iconIndexReady;
     renderDesktop(data.chats);
     if (data.chats.length > 0) openChat(data.chats.length - 1);
   });

@@ -4,9 +4,10 @@ let selectedIcon = null;
 let iconIndex = null;
 
 /* Cargar índice de iconos */
-fetch('assets/icons/index.json')
+const iconIndexReady = fetch('assets/icons/index.json')
   .then(r => r.json())
-  .then(idx => { iconIndex = idx; });
+  .then(idx => { iconIndex = idx; })
+  .catch(() => { iconIndex = {}; });
 
 function getIconSrc(key) {
   if (iconIndex && iconIndex[key]) {
