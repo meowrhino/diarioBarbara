@@ -4,8 +4,8 @@
     {
       "name": "diarioBarbara",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8080"],
-      "port": 8080
+      "runtimeArgs": ["-m", "http.server", "8085"],
+      "port": 8085
     }
   ]
 }

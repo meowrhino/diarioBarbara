@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Propuesta 5.3 — El Chat (GSAP + tsParticles)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Space+Mono:wght@400;700&family=Caveat:wght@400;700&family=Nunito:wght@400;600;700;900&display=swap" rel="stylesheet">
+
+
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; overflow: hidden; }
+    body {
+      font-family: 'Quicksand', 'Nunito', sans-serif;
+      background: #87CEEB;
+      color: #1a1a1a;
+    }
+
+    /* ── ANIMATED GRADIENT (CSS keyframes, no Granim) ── */
+    .gradient-bg {
+      position: fixed; inset: 0; z-index: 0;
+      background: linear-gradient(135deg, #80DEEA, #CE93D8, #A5D6A7, #F8BBD0);
+      background-size: 400% 400%;
+      animation: gradientShift 18s ease infinite;
+    }
+    @keyframes gradientShift {
+      0%   { background-position: 0% 50%; }
+      25%  { background-position: 100% 50%; }
+      50%  { background-position: 100% 0%; }
+      75%  { background-position: 0% 100%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* ── TSPARTICLES CONTAINER ── */
+    #tsparticles {
+      position: fixed; inset: 0; z-index: 1;
+    }
+
+    /* ── GLASS UTILITIES ── */
+    .glass {
+      background: rgba(255,255,255,0.16);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255,255,255,0.28);
+    }
+    .glass-shine::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 42%; bottom: 58%;
+      background: linear-gradient(135deg, rgba(255,255,255,0.38) 0%, transparent 100%);
+      border-radius: inherit;
+      pointer-events: none;
+    }
+
+    /* ── CHAT APP ── */
+    .chat-app {
+      position: fixed; inset: 0; z-index: 10;
+      display: flex; align-items: center; justify-content: center;
+      padding: 20px;
+    }
+    .chat-container {
+      position: relative;
+      width: 100%; max-width: 520px;
+      height: min(92vh, 780px);
+      border-radius: 26px;
+      overflow: hidden;
+      display: flex; flex-direction: column;
+      box-shadow:
+        0 10px 40px rgba(0,0,0,0.12),
+        0 2px 8px rgba(0,0,0,0.07),
+        inset 0 1px 0 rgba(255,255,255,0.45);
+    }
+
+    /* ── CHAT HEADER ── */
+    .chat-header {
+      position: relative;
+      padding: 16px 20px;
+      display: flex; align-items: center; gap: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      flex-shrink: 0;
+    }
+    .avatar {
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #e91e8c, #8E24AA);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      box-shadow: 0 3px 16px rgba(233,30,140,0.3);
+      flex-shrink: 0;
+      position: relative;
+    }
+    .avatar-shine {
+      position: absolute; top: 3px; left: 7px;
+      width: 17px; height: 10px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.5) 0%, transparent 100%);
+      border-radius: 50%;
+      pointer-events: none;
+    }
+    .online-dot {
+      width: 10px; height: 10px;
+      background: #4CAF50;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,0.6);
+      position: absolute; bottom: 0; right: 0;
+    }
+    .header-info h2 {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.05rem; font-weight: 700;
+      color: #1a1a1a;
+    }
+    .header-info span {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.65rem; color: rgba(0,0,0,0.42);
+    }
+    .header-actions {
+      margin-left: auto;
+      display: flex; gap: 10px;
+    }
+    .header-btn {
+      width: 37px; height: 37px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.26);
+      border: 1px solid rgba(255,255,255,0.32);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      position: relative; overflow: hidden;
+    }
+    .header-btn::before {
+      content: '';
+      position: absolute; top: 2px; left: 5px; right: 5px; bottom: 52%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.32) 0%, transparent 100%);
+      border-radius: 50%;
+    }
+    .header-btn:hover { background: rgba(255,255,255,0.42); }
+
+    /* ── MESSAGES AREA ── */
+    .chat-body {
+      flex: 1;
+      overflow-y: auto;
+      scroll-behavior: smooth;
+      padding: 20px 16px;
+      display: flex; flex-direction: column; gap: 12px;
+      background: rgba(255,255,255,0.04);
+    }
+    .chat-body::-webkit-scrollbar { width: 4px; }
+    .chat-body::-webkit-scrollbar-track { background: transparent; }
+    .chat-body::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.22);
+      border-radius: 4px;
+    }
+
+    /* ── MESSAGE BUBBLES ── */
+    .msg { display: flex; align-items: flex-end; gap: 8px; }
+    .msg.user { justify-content: flex-end; }
+    .msg-avatar {
+      width: 28px; height: 28px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #e91e8c, #8E24AA);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.75rem;
+      flex-shrink: 0;
+      position: relative;
+    }
+    .msg-avatar::after {
+      content: '';
+      position: absolute; top: 1px; left: 4px;
+      width: 10px; height: 6px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.42) 0%, transparent 100%);
+      border-radius: 50%;
+    }
+
+    .bubble {
+      max-width: 75%;
+      padding: 10px 15px;
+      border-radius: 18px 18px 18px 5px;
+      font-size: 0.9rem;
+      line-height: 1.55;
+      position: relative;
+    }
+    .bubble.barbara {
+      background: rgba(255,255,255,0.52);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,0.42);
+      color: #1a1a1a;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    .bubble.barbara::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 38%; bottom: 48%;
+      background: linear-gradient(135deg, rgba(255,255,255,0.32) 0%, transparent 100%);
+      border-radius: inherit;
+      pointer-events: none;
+    }
+    .bubble.user-bubble {
+      background: linear-gradient(135deg, #4FC3F7, #0288D1);
+      color: #fff;
+      border-radius: 18px 18px 5px 18px;
+      border: 1px solid rgba(255,255,255,0.22);
+      box-shadow: 0 3px 14px rgba(2,136,209,0.24);
+    }
+    .bubble.user-bubble::before {
+      content: '';
+      position: absolute; top: 0; left: 18%; right: 0; bottom: 48%;
+      background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 100%);
+      border-radius: inherit;
+      pointer-events: none;
+    }
+
+    /* ── VIDEO BUBBLE ── */
+    .video-wrap { max-width: 80%; }
+    .video-container {
+      position: relative;
+      border-radius: 18px 18px 18px 5px;
+      overflow: hidden;
+      background: #0a0a0a;
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 4px 22px rgba(0,0,0,0.14);
+      cursor: pointer;
+    }
+    .video-container video {
+      display: block; width: 100%;
+      aspect-ratio: 16/9;
+      object-fit: cover;
+    }
+    .play-overlay {
+      position: absolute; inset: 0;
+      background: rgba(0,0,0,0.22);
+      display: flex; align-items: center; justify-content: center;
+      transition: opacity 0.3s;
+    }
+    .play-btn {
+      width: 58px; height: 58px;
+      border-radius: 50%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.92) 0%, rgba(255,255,255,0.68) 100%);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow:
+        0 4px 20px rgba(0,0,0,0.2),
+        inset 0 2px 0 rgba(255,255,255,0.65),
+        inset 0 -2px 4px rgba(0,0,0,0.08);
+      position: relative;
+    }
+    .play-btn::before {
+      content: '';
+      position: absolute; top: 4px; left: 9px; right: 9px; bottom: 50%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.75) 0%, transparent 100%);
+      border-radius: 50%;
+    }
+    .play-btn::after {
+      content: '';
+      width: 0; height: 0;
+      border-style: solid;
+      border-width: 10px 0 10px 18px;
+      border-color: transparent transparent transparent #e91e8c;
+      margin-left: 3px;
+    }
+    .video-meta {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.68rem;
+      color: rgba(0,0,0,0.36);
+      margin-top: 5px; margin-left: 4px;
+    }
+
+    /* ── TYPING INDICATOR ── */
+    .typing-bubble {
+      display: flex; align-items: center; gap: 5px;
+      padding: 14px 18px;
+    }
+    .typing-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: rgba(0,0,0,0.28);
+    }
+
+    /* ── INPUT BAR ── */
+    .chat-input {
+      position: relative;
+      padding: 12px 16px;
+      display: flex; gap: 10px; align-items: center;
+      border-top: 1px solid rgba(255,255,255,0.2);
+      flex-shrink: 0;
+    }
+    .input-field {
+      flex: 1;
+      background: rgba(255,255,255,0.32);
+      border: 1px solid rgba(255,255,255,0.4);
+      border-radius: 22px;
+      padding: 10px 18px;
+      font-family: 'Quicksand', sans-serif;
+      font-size: 0.88rem;
+      color: #1a1a1a;
+      outline: none;
+      transition: all 0.3s;
+    }
+    .input-field::placeholder { color: rgba(0,0,0,0.28); }
+    .input-field:focus {
+      background: rgba(255,255,255,0.5);
+      border-color: rgba(255,255,255,0.58);
+      box-shadow: 0 0 20px rgba(255,255,255,0.14);
+    }
+    .send-btn {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #e91e8c, #C2185B);
+      border: none;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer;
+      box-shadow:
+        0 3px 14px rgba(233,30,140,0.32),
+        inset 0 2px 0 rgba(255,255,255,0.24);
+      position: relative;
+      transition: transform 0.15s, box-shadow 0.15s;
+      flex-shrink: 0;
+    }
+    .send-btn::before {
+      content: '';
+      position: absolute; top: 3px; left: 7px; right: 7px; bottom: 52%;
+      background: linear-gradient(180deg, rgba(255,255,255,0.34) 0%, transparent 100%);
+      border-radius: 50%;
+    }
+    .send-btn:hover { transform: scale(1.06); box-shadow: 0 5px 20px rgba(233,30,140,0.42), inset 0 2px 0 rgba(255,255,255,0.24); }
+    .send-btn:active { transform: scale(0.94); }
+    .send-btn svg { width: 18px; height: 18px; fill: #fff; margin-left: 1px; }
+
+    /* ── SEEN INDICATOR ── */
+    .seen {
+      font-family: 'Space Mono', monospace;
+      font-size: 0.6rem;
+      color: rgba(0,0,0,0.22);
+      text-align: right;
+      margin-top: -6px;
+      padding-right: 4px;
+    }
+
+    /* ── STACK LABEL ── */
+    .stack-label {
+      position: fixed; bottom: 12px; right: 16px; z-index: 100;
+      font-family: 'Space Mono', monospace;
+      font-size: 0.55rem;
+      color: rgba(255,255,255,0.28);
+      letter-spacing: 1px;
+    }
+
+    /* ── ENTRY ANIMATION ── */
+    .msg-enter {
+      opacity: 0;
+      transform: translateY(20px) scale(0.94);
+    }
+    .msg-enter-active {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      transition: opacity 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+                  transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* ── DOT ANIMATIONS ── */
+    @keyframes bounce-dot {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-5px); }
+    }
+    @keyframes pulse-dot {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.35); opacity: 0.55; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 560px) {
+      .chat-app { padding: 0; }
+      .chat-container { max-width: 100%; height: 100vh; border-radius: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- CSS animated gradient -->
+  <div class="gradient-bg"></div>
+
+  <!-- tsParticles (interactive bokeh) -->
+  <div id="tsparticles"></div>
+
+  <!-- Chat -->
+  <div class="chat-app">
+    <div class="chat-container glass glass-shine">
+
+      <!-- Header -->
+      <div class="chat-header">
+        <div class="avatar">
+          <span>🌸</span>
+          <div class="avatar-shine"></div>
+          <div class="online-dot" id="online-dot"></div>
+        </div>
+        <div class="header-info">
+          <h2>Barbara</h2>
+          <span>en linea ahora</span>
+        </div>
+        <div class="header-actions">
+          <div class="header-btn">📞</div>
+          <div class="header-btn">📹</div>
+        </div>
+      </div>
+
+      <!-- Messages -->
+      <div class="chat-body" id="chat-body"></div>
+
+      <!-- Input -->
+      <div class="chat-input">
+        <input type="text" class="input-field" id="msg-input" placeholder="Escribe un mensaje..." autocomplete="off">
+        <button class="send-btn" id="send-btn" aria-label="Enviar">
+          <svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="stack-label">GSAP + TSPARTICLES — STACK C</div>
+
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
+
+<script>
+(async function() {
+
+  /* ═══════════════════════════════════════
+     TSPARTICLES — interactive bokeh bubbles
+  ═══════════════════════════════════════ */
+  await tsParticles.load('tsparticles', {
+    fullScreen: false,
+    background: { color: 'transparent' },
+    particles: {
+      number: { value: 40, density: { enable: true, area: 900 } },
+      color: {
+        value: ['#ffffff', '#B3E5FC', '#F8BBD0', '#C8E6C9', '#E1BEE7', '#FFF9C4'],
+      },
+      shape: { type: 'circle' },
+      opacity: {
+        value: { min: 0.06, max: 0.3 },
+        animation: { enable: true, speed: 0.3, minimumValue: 0.04, sync: false },
+      },
+      size: {
+        value: { min: 4, max: 28 },
+        animation: { enable: true, speed: 1.2, minimumValue: 3, sync: false },
+      },
+      move: {
+        enable: true, speed: 0.5,
+        direction: 'none', random: true,
+        outModes: { default: 'out' },
+      },
+      wobble: { enable: true, distance: 8, speed: 3 },
+    },
+    interactivity: {
+      detectsOn: 'window',
+      events: {
+        onHover: { enable: true, mode: 'repulse' },
+        onClick: { enable: true, mode: 'push' },
+      },
+      modes: {
+        repulse: { distance: 100, duration: 0.6, speed: 0.3 },
+        push: { quantity: 2 },
+      },
+    },
+    detectRetina: true,
+  });
+
+  /* ═══════════════════════════════════════
+     ONLINE DOT — CSS animation
+  ═══════════════════════════════════════ */
+  document.getElementById('online-dot').style.animation = 'pulse-dot 1.4s ease-in-out infinite';
+
+  /* ═══════════════════════════════════════
+     CHAT BODY + SCROLL
+  ═══════════════════════════════════════ */
+  const chatBody = document.getElementById('chat-body');
+
+  function scrollToBottom() {
+    chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: 'smooth' });
+  }
+
+  /* ═══════════════════════════════════════
+     MESSAGE DATA
+  ═══════════════════════════════════════ */
+  const videoSrc = '../videos/WIN_20260311_18_57_36_Pro.mp4';
+
+  const messages = [
+    { sender: 'barbara', type: 'text', content: 'hola! 👋 bienvenido a mi diario', delay: 300 },
+    { sender: 'barbara', type: 'text', content: 'esto es algo que nunca pense hacer... pero aqui estoy', delay: 1500 },
+    { sender: 'barbara', type: 'video', src: videoSrc, caption: 'Hola internet 👋 · 2:34 · 15 mar', delay: 3000 },
+    { sender: 'barbara', type: 'text', content: 'lo se, quede muy rigida jajaja 😅 pero lo intente', delay: 5000 },
+    { sender: 'user', type: 'text', content: 'me encanto! se nota que eres super genuina 💕', delay: 6500 },
+    { sender: 'seen', delay: 7000 },
+    { sender: 'barbara', type: 'text', content: 'ay gracias!! 🥺 mira el segundo intento...', delay: 7800 },
+    { sender: 'barbara', type: 'video', src: videoSrc, caption: 'Segundo intento 😅 · 1:47 · 22 mar', delay: 9500 },
+    { sender: 'barbara', type: 'text', content: 'esta vez no me temblaron tanto las manos 🌱', delay: 11500 },
+    { sender: 'user', type: 'text', content: 'cada vez mejor! 🔥', delay: 13000 },
+    { sender: 'seen', delay: 13500 },
+    { sender: 'barbara', type: 'video', src: videoSrc, caption: 'Ya me da menos vergüenza 🌱 · 3:12 · 29 mar', delay: 14500 },
+    { sender: 'barbara', type: 'text', content: 'creo que ya le voy agarrando la onda 🌱', delay: 16500 },
+    { sender: 'barbara', type: 'typing', delay: 18000 },
+  ];
+
+  /* ═══════════════════════════════════════
+     CREATE ELEMENTS
+  ═══════════════════════════════════════ */
+  function createTextBubble(sender, content) {
+    const wrap = document.createElement('div');
+    wrap.className = `msg ${sender === 'user' ? 'user' : ''}`;
+    if (sender === 'barbara') {
+      wrap.innerHTML = `<div class="msg-avatar">🌸</div><div class="bubble barbara">${content}</div>`;
+    } else {
+      wrap.innerHTML = `<div class="bubble user-bubble">${content}</div>`;
+    }
+    return wrap;
+  }
+
+  function createVideoBubble(src, caption) {
+    const wrap = document.createElement('div');
+    wrap.className = 'msg';
+    const id = 'vid-' + Math.random().toString(36).substr(2, 6);
+    wrap.innerHTML = `
+      <div class="msg-avatar">🌸</div>
+      <div class="video-wrap">
+        <div class="video-container" id="${id}">
+          <video src="${src}" preload="metadata" playsinline></video>
+          <div class="play-overlay"><div class="play-btn"></div></div>
+        </div>
+        <div class="video-meta">${caption}</div>
+      </div>
+    `;
+    setTimeout(() => {
+      const container = document.getElementById(id);
+      if (!container) return;
+      const video = container.querySelector('video');
+      const overlay = container.querySelector('.play-overlay');
+      container.addEventListener('click', () => {
+        if (video.paused) { video.play(); overlay.style.opacity = '0'; }
+        else { video.pause(); overlay.style.opacity = '1'; }
+      });
+      video.addEventListener('ended', () => { overlay.style.opacity = '1'; });
+    }, 50);
+    return wrap;
+  }
+
+  function createTypingIndicator() {
+    const wrap = document.createElement('div');
+    wrap.className = 'msg';
+    wrap.innerHTML = `
+      <div class="msg-avatar">🌸</div>
+      <div class="bubble barbara typing-bubble">
+        <div class="typing-dot" style="animation:bounce-dot 0.6s ease-in-out infinite"></div>
+        <div class="typing-dot" style="animation:bounce-dot 0.6s ease-in-out 0.15s infinite"></div>
+        <div class="typing-dot" style="animation:bounce-dot 0.6s ease-in-out 0.3s infinite"></div>
+      </div>
+    `;
+    return wrap;
+  }
+
+  function createSeen() {
+    const div = document.createElement('div');
+    div.className = 'seen';
+    div.textContent = 'visto ✓✓';
+    return div;
+  }
+
+  /* ═══════════════════════════════════════
+     ADD MESSAGE with CSS animation
+  ═══════════════════════════════════════ */
+  function addMessage(el) {
+    el.classList.add('msg-enter');
+    chatBody.appendChild(el);
+    el.offsetHeight;
+    el.classList.add('msg-enter-active');
+    scrollToBottom();
+  }
+
+  /* ═══════════════════════════════════════
+     MESSAGE SEQUENCE — setTimeout
+  ═══════════════════════════════════════ */
+  messages.forEach((msg) => {
+    setTimeout(() => {
+      let el;
+      if (msg.type === 'text') el = createTextBubble(msg.sender, msg.content);
+      else if (msg.type === 'video') el = createVideoBubble(msg.src, msg.caption);
+      else if (msg.type === 'typing') el = createTypingIndicator();
+      else if (msg.sender === 'seen') el = createSeen();
+      if (el) addMessage(el);
+    }, msg.delay);
+  });
+
+  /* ═══════════════════════════════════════
+     USER INPUT — interactive send
+  ═══════════════════════════════════════ */
+  const input = document.getElementById('msg-input');
+  const sendBtn = document.getElementById('send-btn');
+
+  const cannedResponses = [
+    'jajaja gracias! 🥺',
+    'me alegra que te guste 💕',
+    'pronto subo mas! 🌸',
+    'eso me da mucho animo!! ✨',
+    'jaja ay que linda 🥹',
+    'ya casi tengo el siguiente listo! 🎬',
+    'tu crees? a veces pienso que es medio raro jaja',
+    'significa mucho para mi, de verdad 💕',
+  ];
+  let responseIdx = 0;
+
+  function sendUserMessage() {
+    const text = input.value.trim();
+    if (!text) return;
+    input.value = '';
+
+    addMessage(createTextBubble('user', text));
+    setTimeout(() => addMessage(createSeen()), 1000);
+    setTimeout(() => {
+      const typing = createTypingIndicator();
+      typing.id = 'temp-typing';
+      addMessage(typing);
+    }, 1800);
+    setTimeout(() => {
+      const temp = document.getElementById('temp-typing');
+      if (temp) { temp.style.opacity = '0'; setTimeout(() => temp.remove(), 250); }
+      setTimeout(() => {
+        const response = cannedResponses[responseIdx % cannedResponses.length];
+        responseIdx++;
+        addMessage(createTextBubble('barbara', response));
+      }, 300);
+    }, 3200);
+  }
+
+  sendBtn.addEventListener('click', sendUserMessage);
+  input.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendUserMessage(); });
+
+})();
+</script>
+
+</body>
+</html>
