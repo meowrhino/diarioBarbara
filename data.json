@@ -8,7 +8,7 @@
     {
       "titulo": "Hola internet",
       "slug": "hola-internet",
-      "icono": "🌸",
+      "icono": "msn",
       "fecha": "2026-03-15",
       "chat": [
         { "emisor": 1, "contenido": ["hola! 👋", "soy barbara y esto es algo que nunca pense hacer"] },
@@ -23,7 +23,7 @@
     {
       "titulo": "Segundo intento",
       "slug": "segundo-intento",
-      "icono": "😅",
+      "icono": "camara",
       "fecha": "2026-03-22",
       "chat": [
         { "emisor": 1, "contenido": ["ey! volvi 😅"] },
@@ -39,7 +39,7 @@
     {
       "titulo": "Ya me da menos vergüenza",
       "slug": "menos-verguenza",
-      "icono": "🌱",
+      "icono": "estrella",
       "fecha": "2026-03-29",
       "chat": [
         { "emisor": 1, "contenido": ["oigan", "creo que ya le estoy agarrando la onda a esto"] },

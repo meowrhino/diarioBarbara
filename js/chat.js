@@ -1,9 +1,6 @@
 /* Ventana de chat */
 const chatWindow = document.getElementById('chat-window');
-const winClose = document.getElementById('win-close');
-const winTitleName = document.getElementById('win-title-name');
 const chatBody = document.getElementById('chat-body');
-const chatStatus = document.getElementById('chat-status');
 const taskItem = document.getElementById('task-item');
 
 let timeouts = [];
@@ -27,11 +24,9 @@ function openChat(idx) {
   timeouts = [];
   chatBody.innerHTML = '';
 
-  winTitleName.textContent = chat.titulo;
   taskItem.textContent = '\u{1F4AC} ' + chat.titulo;
   taskItem.classList.add('visible', 'active');
   chatWindow.classList.add('open');
-  chatStatus.textContent = 'escribiendo...';
 
   let delay = 400;
   const msgs = chat.chat;
@@ -44,13 +39,6 @@ function openChat(idx) {
     timeouts.push(setTimeout(() => {
       removeTyping();
       renderMessage(msg);
-      if (i === msgs.length - 1) {
-        chatStatus.textContent = 'en linea';
-      } else if (msgs[i + 1] && msgs[i + 1].emisor === 1) {
-        chatStatus.textContent = 'escribiendo...';
-      } else {
-        chatStatus.textContent = 'en linea';
-      }
     }, delay));
     delay += (typeof msg.contenido === 'string') ? 1600 : 1000;
   });
@@ -64,7 +52,6 @@ function closeChat() {
   timeouts = [];
 }
 
-winClose.addEventListener('click', closeChat);
 taskItem.addEventListener('click', () => {
   if (chatWindow.classList.contains('open')) closeChat();
   else chatWindow.classList.add('open');
