@@ -8,6 +8,7 @@ const winClose = document.getElementById('win-close');
 const winTitleName = document.getElementById('win-title-name');
 const chatBody = document.getElementById('chat-body');
 const chatStatus = document.getElementById('chat-status');
+const chatMeta = document.getElementById('chat-meta');
 
 let timeouts = [];
 let chatData = null;
@@ -59,12 +60,15 @@ function openChat(idx) {
   chatBody.innerHTML = '';
 
   /* resetear posición al centro */
-  chatFrame.classList.remove('dragged');
+  chatFrame.classList.remove('dragged', 'needs-scroll');
   chatFrame.style.left = '';
   chatFrame.style.top = '';
 
   winTitleName.textContent = chat.titulo;
-  chatWindow.classList.add('open');
+  chatWindow.classList.remove('closing');
+  chatWindow.classList.add('visible');
+  requestAnimationFrame(() => chatWindow.classList.add('open'));
+  chatMeta.classList.remove('hidden');
   chatStatus.textContent = 'escribiendo...';
 
   let delay = 400;
@@ -79,7 +83,7 @@ function openChat(idx) {
       removeTyping();
       renderMessage(msg);
       if (i === msgs.length - 1) {
-        chatStatus.textContent = 'en linea';
+        chatMeta.classList.add('hidden');
       } else if (msgs[i + 1] && msgs[i + 1].emisor === 1) {
         chatStatus.textContent = 'escribiendo...';
       } else {
@@ -92,9 +96,14 @@ function openChat(idx) {
 
 /* ── cerrar chat ── */
 function closeChat() {
-  chatWindow.classList.remove('open');
+  if (!chatWindow.classList.contains('visible')) return;
   timeouts.forEach(clearTimeout);
   timeouts = [];
+  chatWindow.classList.remove('open');
+  chatWindow.classList.add('closing');
+  chatFrame.addEventListener('animationend', () => {
+    chatWindow.classList.remove('visible', 'closing');
+  }, { once: true });
 }
 
 winClose.addEventListener('click', closeChat);
@@ -104,6 +113,7 @@ document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeChat(
    Renderizar mensajes
 ═══════════════════════════════ */
 const FULLSCREEN_SVG = `<svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>`;
+const AVATAR_SVG = `<svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="16" fill="#f8a4d0"/><circle cx="11" cy="14" r="2.2" fill="#3a2a2a"/><circle cx="21" cy="14" r="2.2" fill="#3a2a2a"/><ellipse cx="11" cy="13.2" rx="1" ry="0.5" fill="#fff" opacity="0.7"/><ellipse cx="21" cy="13.2" rx="1" ry="0.5" fill="#fff" opacity="0.7"/><path d="M12 20.5 Q16 24 20 20.5" stroke="#e05a7a" stroke-width="1.5" fill="none" stroke-linecap="round"/><circle cx="7" cy="18" r="2.5" fill="#f48fb1" opacity="0.4"/><circle cx="25" cy="18" r="2.5" fill="#f48fb1" opacity="0.4"/></svg>`;
 
 function renderMessage(msg) {
   const isVideo = typeof msg.contenido === 'string' && /\.(webm|mp4)$/i.test(msg.contenido);
@@ -114,7 +124,7 @@ function renderMessage(msg) {
     el.className = 'msg';
     const id = 'v' + Math.random().toString(36).substr(2, 5);
     el.innerHTML = `
-      <div class="msg-av-sm">\u{1F338}</div>
+      <div class="msg-av-sm">${AVATAR_SVG}</div>
       <div class="video-wrap">
         <div class="video-box" id="${id}">
           <video src="${msg.contenido}" preload="metadata" playsinline></video>
@@ -131,7 +141,7 @@ function renderMessage(msg) {
     const bc = isBarb ? 'b-in' : 'b-out';
     const html = ps.map(p => `<p>${p}</p>`).join('');
     el.innerHTML = isBarb
-      ? `<div class="msg-av-sm">\u{1F338}</div><div class="bubble ${bc}">${html}</div>`
+      ? `<div class="msg-av-sm">${AVATAR_SVG}</div><div class="bubble ${bc}">${html}</div>`
       : `<div class="bubble ${bc}">${html}</div>`;
     addMsg(el);
   }
@@ -171,6 +181,10 @@ function addMsg(el) {
   chatBody.appendChild(el);
   el.offsetHeight; // forzar reflow
   el.classList.add('msg-enter-active');
+  /* detectar si necesita scroll */
+  if (!chatFrame.classList.contains('needs-scroll') && chatBody.scrollHeight > chatBody.clientHeight) {
+    chatFrame.classList.add('needs-scroll');
+  }
   chatBody.scrollTo({ top: chatBody.scrollHeight, behavior: 'smooth' });
 }
 
@@ -183,7 +197,7 @@ function showTyping() {
   el.className = 'msg';
   el.id = 'typing-ind';
   el.innerHTML = `
-    <div class="msg-av-sm">\u{1F338}</div>
+    <div class="msg-av-sm">${AVATAR_SVG}</div>
     <div class="bubble b-in typing-wrap">
       <div class="t-dot" style="animation:bounce-dot .5s ease-in-out infinite"></div>
       <div class="t-dot" style="animation:bounce-dot .5s ease-in-out .12s infinite"></div>
