@@ -5,11 +5,13 @@
    que está definido en js/chat.js.
 ═══════════════════════════════ */
 const chaptersGrid = document.getElementById('chapters-grid');
-const topbarDate = document.getElementById('topbar-date');
 let iconIndex = null;
 
+/* AVATAR_SVG por defecto = carita "feliz" del set. CARITAS está en js/caritas.js */
+const AVATAR_SVG = CARITAS.feliz;
+
 /* Cargar índice de iconos (se mantiene para los thumbnails de las cards) */
-const iconIndexReady = fetch('assets/icons/index.json')
+const iconIndexReady = fetch('assets/icons/index.json', { cache: 'no-store' })
   .then(r => r.json())
   .then(idx => { iconIndex = idx; })
   .catch(() => { iconIndex = {}; });
@@ -26,7 +28,9 @@ function firstTextPreview(chat) {
   const msg = chat.find(m => Array.isArray(m.contenido) || (typeof m.contenido === 'string' && !/\.(webm|mp4)$/i.test(m.contenido)));
   if (!msg) return '...';
   const text = Array.isArray(msg.contenido) ? msg.contenido[0] : msg.contenido;
-  return text.length > 70 ? text.slice(0, 67) + '...' : text;
+  /* quitar tags :nombre: del preview para que no salgan en bruto */
+  const clean = text.replace(/:[a-zñ]+:/g, '').replace(/\s+/g, ' ').trim();
+  return clean.length > 70 ? clean.slice(0, 67) + '...' : clean;
 }
 
 /* ── formatear fecha estilo Y2K (MAR 15 · 26) ── */
@@ -44,10 +48,10 @@ function renderDesktop(chats) {
     const el = document.createElement('div');
     el.className = 'chapter-card';
 
-    const iconSrc = getIconSrc(chat.icono);
-    const iconHtml = iconSrc
-      ? `<img src="${iconSrc}" alt="${chat.icono}" draggable="false">`
-      : `<span class="emoji-fallback">${chat.icono}</span>`;
+    /* la carita del card = el campo "icono" de data.json mapeado a CARITAS;
+       cae a "feliz" si no existe la key */
+    const carita = CARITAS[chat.icono] || CARITAS.feliz;
+    const iconHtml = `<div class="avatar-svg">${carita}</div>`;
 
     const epNum = String(idx + 1).padStart(2, '0');
     const fecha = formatDateY2K(chat.fecha || '');
@@ -66,10 +70,4 @@ function renderDesktop(chats) {
     el.addEventListener('click', () => openChat(idx));
     chaptersGrid.appendChild(el);
   });
-
-  /* fecha del topbar = fecha del último capítulo */
-  if (topbarDate && chats.length) {
-    const last = chats[chats.length - 1];
-    topbarDate.textContent = formatDateY2K(last.fecha || '');
-  }
 }

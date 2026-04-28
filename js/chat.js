@@ -42,7 +42,7 @@ document.addEventListener('mouseup', () => { isDragging = false; });
 /* ═══════════════════════════════
    Datos — cargar y arrancar
 ═══════════════════════════════ */
-fetch('data.json')
+fetch('data.json', { cache: 'no-store' })
   .then(r => r.json())
   .then(async data => {
     chatData = data;
@@ -95,25 +95,30 @@ function openChat(idx) {
 }
 
 /* ── cerrar chat ── */
+let closeTimer = null;
+
 function closeChat() {
   if (!chatWindow.classList.contains('visible')) return;
   timeouts.forEach(clearTimeout);
   timeouts = [];
+  if (closeTimer) clearTimeout(closeTimer);
   chatWindow.classList.remove('open');
   chatWindow.classList.add('closing');
-  chatFrame.addEventListener('animationend', () => {
+  closeTimer = setTimeout(() => {
     chatWindow.classList.remove('visible', 'closing');
-  }, { once: true });
+    closeTimer = null;
+  }, 200);
 }
 
-winClose.addEventListener('click', closeChat);
+winClose.addEventListener('click', (e) => { e.stopPropagation(); closeChat(); });
 document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeChat(); });
+chatWindow.addEventListener('click', (e) => { if (e.target === chatWindow) closeChat(); });
 
 /* ═══════════════════════════════
    Renderizar mensajes
 ═══════════════════════════════ */
 const FULLSCREEN_SVG = `<svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>`;
-const AVATAR_SVG = `<svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="16" fill="#ffd338"/><circle cx="11" cy="14" r="2.2" fill="#1a0f08"/><circle cx="21" cy="14" r="2.2" fill="#1a0f08"/><ellipse cx="11" cy="13.2" rx="1" ry="0.5" fill="#fff" opacity="0.85"/><ellipse cx="21" cy="13.2" rx="1" ry="0.5" fill="#fff" opacity="0.85"/><path d="M12 20.5 Q16 24 20 20.5" stroke="#b8420c" stroke-width="1.6" fill="none" stroke-linecap="round"/><circle cx="7" cy="18" r="2.5" fill="#e85a13" opacity="0.55"/><circle cx="25" cy="18" r="2.5" fill="#e85a13" opacity="0.55"/></svg>`;
+/* AVATAR_SVG y parseInlineCaritas() vienen de js/caritas.js + js/portal.js (cargados antes) */
 
 function renderMessage(msg) {
   const isVideo = typeof msg.contenido === 'string' && /\.(webm|mp4)$/i.test(msg.contenido);
@@ -139,7 +144,7 @@ function renderMessage(msg) {
     const el = document.createElement('div');
     el.className = `msg ${isBarb ? '' : 'user'}`;
     const bc = isBarb ? 'b-in' : 'b-out';
-    const html = ps.map(p => `<p>${p}</p>`).join('');
+    const html = ps.map(p => `<p>${parseInlineCaritas(p)}</p>`).join('');
     el.innerHTML = isBarb
       ? `<div class="msg-av-sm">${AVATAR_SVG}</div><div class="bubble ${bc}">${html}</div>`
       : `<div class="bubble ${bc}">${html}</div>`;

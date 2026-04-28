@@ -8,48 +8,48 @@
     {
       "titulo": "Hola internet",
       "slug": "hola-internet",
-      "icono": "msn",
+      "icono": "risueña",
       "fecha": "2026-03-15",
       "chat": [
-        { "emisor": 1, "contenido": ["hola! 👋", "soy barbara y esto es algo que nunca pense hacer"] },
+        { "emisor": 1, "contenido": ["hola! :risueña:", "soy barbara y esto es algo que nunca pense hacer"] },
         { "emisor": 1, "contenido": ["pero aqui estoy... grabandome y subiendolo a internet", "que raro suena eso jaja"] },
         { "emisor": 1, "contenido": "videos/WIN_20260311_18_57_36_Pro_720p.webm" },
-        { "emisor": 1, "contenido": ["lo se, quede MUY rigida 😅", "pero lo intente y eso ya es algo no?"] },
-        { "emisor": 2, "contenido": ["me encanto! se nota que eres super genuina 💕"] },
-        { "emisor": 1, "contenido": ["ay 🥺", "eso me da mucho animo de verdad"] },
+        { "emisor": 1, "contenido": ["lo se, quede MUY rigida :nerviosa:", "pero lo intente y eso ya es algo no?"] },
+        { "emisor": 2, "contenido": ["me encanto! se nota que eres super genuina :enamorada:"] },
+        { "emisor": 1, "contenido": ["ay :timida:", "eso me da mucho animo de verdad"] },
         { "emisor": 1, "contenido": ["creo que voy a intentar hacer mas..."] }
       ]
     },
     {
       "titulo": "Segundo intento",
       "slug": "segundo-intento",
-      "icono": "camara",
+      "icono": "timida",
       "fecha": "2026-03-22",
       "chat": [
-        { "emisor": 1, "contenido": ["ey! volvi 😅"] },
+        { "emisor": 1, "contenido": ["ey! volvi :nerviosa:"] },
         { "emisor": 1, "contenido": ["esta vez intente estar mas relajada", "no se si se nota pero por dentro estaba menos nerviosa"] },
         { "emisor": 1, "contenido": "videos/WIN_20260311_18_57_36_Pro_720p.webm" },
-        { "emisor": 1, "contenido": ["esta vez no me temblaron tanto las manos 🌱"] },
-        { "emisor": 2, "contenido": ["cada vez mejor! 🔥"] },
+        { "emisor": 1, "contenido": ["esta vez no me temblaron tanto las manos :muyfeliz:"] },
+        { "emisor": 2, "contenido": ["cada vez mejor! :estrellada:"] },
         { "emisor": 1, "contenido": ["tu crees?? a veces pienso que es medio raro", "pero tambien se siente bien compartir algo asi"] },
         { "emisor": 2, "contenido": ["para nada raro, es super valiente"] },
-        { "emisor": 1, "contenido": ["💕💕💕"] }
+        { "emisor": 1, "contenido": [":enamorada::enamorada::enamorada:"] }
       ]
     },
     {
       "titulo": "Ya me da menos vergüenza",
       "slug": "menos-verguenza",
-      "icono": "estrella",
+      "icono": "estrellada",
       "fecha": "2026-03-29",
       "chat": [
         { "emisor": 1, "contenido": ["oigan", "creo que ya le estoy agarrando la onda a esto"] },
         { "emisor": 1, "contenido": "videos/WIN_20260311_18_57_36_Pro_720p.webm" },
         { "emisor": 1, "contenido": ["miren! ya no parezco robot jajaja", "bueno... un poco menos robot"] },
-        { "emisor": 2, "contenido": ["la evolucion es real 😂"] },
-        { "emisor": 1, "contenido": ["jajaja gracias 🥹", "me gusta pensar que cada video es un poquito mejor"] },
+        { "emisor": 2, "contenido": ["la evolucion es real :risa:"] },
+        { "emisor": 1, "contenido": ["jajaja gracias :timida:", "me gusta pensar que cada video es un poquito mejor"] },
         { "emisor": 1, "contenido": ["pronto les quiero ensenar mi cuarto", "es un desastre bonito como yo"] },
         { "emisor": 2, "contenido": ["ya quiero ver eso!!"] },
-        { "emisor": 1, "contenido": ["🌸 pronto pronto"] }
+        { "emisor": 1, "contenido": [":risueña: pronto pronto"] }
       ]
     }
   ]
