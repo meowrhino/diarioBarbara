@@ -1,71 +1,102 @@
 /* ═══════════════════════════════
-   VENTANA DE CHAT
-   Estilo suave inspirado en MSN Messenger
+   VENTANA DE CHAT — reskin Y2K naranja Britney 2002
+   La estructura HTML que inyecta js/chat.js no se toca:
+   solo cambian colores, bordes y texturas.
 ═══════════════════════════════ */
+
+/* paleta local (se importa visualmente desde portal.css pero la duplicamos
+   por si chat.css se usa sin portal — defensivo y barato) */
+.chat-window {
+  --orange-deep:   #b8420c;
+  --orange:        #e85a13;
+  --orange-mid:    #d04a0a;
+  --orange-light:  #f7d29a;
+  --paper:         #fff3e0;
+  --ink:           #1a0f08;
+  --accent:        #ffd338;
+  --hot:           #ff6b1a;
+}
+
 .chat-window {
   position: fixed; inset: 0; z-index: 20;
   display: none;
+  /* fondo atenuado tipo modal Y2K */
+  background: rgba(26, 15, 8, 0.45);
 }
 .chat-window.visible { display: block; }
 .chat-window.open .chat-frame {
-  animation: win-open 0.25s ease-out forwards;
+  animation: win-open 0.22s ease-out forwards;
 }
 .chat-window.closing .chat-frame {
-  animation: win-close 0.2s ease-in forwards;
+  animation: win-close 0.18s ease-in forwards;
 }
 .chat-window.closing .chat-frame.dragged {
-  animation: win-close-dragged 0.2s ease-in forwards;
+  animation: win-close-dragged 0.18s ease-in forwards;
 }
 
 .chat-frame {
   position: absolute;
-  /* centrada por defecto — JS puede sobreescribir top/left */
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
   width: min(480px, calc(100% - 32px));
   max-height: min(85vh, 680px);
   display: flex; flex-direction: column;
-  /* fondo transparente con blur (glassmorphism) */
-  background: rgba(255,255,255,0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-radius: 10px;
+  background: var(--paper);
+  border: 2px solid var(--ink);
   box-shadow:
-    0 8px 32px rgba(0,0,0,0.2),
-    0 1px 4px rgba(0,0,0,0.1);
+    4px 4px 0 var(--ink),
+    8px 8px 0 rgba(184, 66, 12, 0.4);
   overflow: hidden;
 }
-/* cuando se arrastra, quitar el transform centrado */
-.chat-frame.dragged {
-  transform: none;
-}
+.chat-frame.dragged { transform: none; }
 
-/* ── barra de título (arrastrable) ── */
+/* ═══════════════════════════════
+   BARRA DE TÍTULO (arrastrable)
+═══════════════════════════════ */
 .win-titlebar {
   display: flex; align-items: center; gap: 8px;
-  padding: 7px 10px;
+  padding: 6px 10px;
   background: linear-gradient(180deg,
-    rgba(74,143,212,0.9) 0%,
-    rgba(58,124,196,0.85) 50%,
-    rgba(45,106,180,0.9) 100%);
+    var(--hot) 0%,
+    var(--orange) 50%,
+    var(--orange-deep) 100%);
+  border-bottom: 2px solid var(--ink);
   flex-shrink: 0;
   cursor: grab;
   user-select: none;
+  position: relative;
+}
+/* franja decorativa de pixels arriba */
+.win-titlebar::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 2px;
+  background: repeating-linear-gradient(90deg,
+    var(--accent) 0 4px,
+    var(--orange-deep) 4px 8px);
 }
 .win-titlebar:active { cursor: grabbing; }
-.win-titlebar-icon { font-size: 14px; }
+.win-titlebar-icon {
+  font-size: 13px;
+  color: var(--accent);
+  text-shadow: 1px 1px 0 var(--ink);
+}
 .win-titlebar-text {
   flex: 1;
   font-size: 11px;
   font-weight: 700;
   color: #fff;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  text-shadow: 1px 1px 0 var(--ink);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 .win-titlebar-meta {
   transition: opacity 0.4s ease;
+  letter-spacing: 0.8px;
+  text-transform: none;
 }
 .win-titlebar-meta.hidden {
   opacity: 0;
@@ -73,41 +104,47 @@
 }
 .win-titlebar-status {
   font-weight: 400;
-  opacity: 0.8;
+  color: var(--accent);
+  font-style: italic;
 }
 
 /* botón cerrar */
 .win-btn-close {
   width: 22px; height: 22px;
-  background: linear-gradient(180deg, rgba(255,255,255,0.2), rgba(255,255,255,0.08));
-  border: 1px solid rgba(255,255,255,0.25);
-  border-radius: 4px;
+  background: var(--accent);
+  border: 1.5px solid var(--ink);
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 700;
-  color: #fff;
+  color: var(--ink);
   line-height: 1;
-  transition: all 0.15s ease;
+  transition: all 0.12s ease;
+  box-shadow: 1px 1px 0 var(--ink);
 }
 .win-btn-close:hover {
-  background: linear-gradient(180deg, #e05a4a, #c4382a);
-  border-color: #a02018;
-  box-shadow: 0 0 6px rgba(220,80,60,0.4);
-  transform: scale(1.1);
+  background: var(--hot);
+  color: var(--accent);
+  transform: translate(-1px, -1px);
+  box-shadow: 2px 2px 0 var(--ink);
 }
 .win-btn-close:active {
-  transform: scale(0.95);
-  background: #a02018;
+  transform: translate(1px, 1px);
+  box-shadow: none;
 }
 
-/* ── área de mensajes ── */
+/* ═══════════════════════════════
+   ÁREA DE MENSAJES
+═══════════════════════════════ */
 .chat-body {
   flex: 0 1 auto;
   overflow-y: hidden;
-  padding: 10px;
+  padding: 12px;
   display: flex; flex-direction: column; gap: 6px;
-  background: transparent;
+  background:
+    /* mini-noise para textura papel */
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='1' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.72  0 0 0 0 0.26  0 0 0 0 0.04  0 0 0 0.06 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"),
+    var(--paper);
 }
 .chat-frame.needs-scroll {
   height: min(85vh, 680px);
@@ -118,64 +155,67 @@
 }
 
 /* scrollbar */
-.chat-body::-webkit-scrollbar { width: 6px; }
-.chat-body::-webkit-scrollbar-track { background: transparent; }
+.chat-body::-webkit-scrollbar { width: 8px; }
+.chat-body::-webkit-scrollbar-track { background: var(--orange-light); }
 .chat-body::-webkit-scrollbar-thumb {
-  background: rgba(0,0,0,0.12);
-  border-radius: 3px;
+  background: var(--orange-deep);
+  border: 1px solid var(--ink);
 }
-.chat-body::-webkit-scrollbar-thumb:hover { background: rgba(0,0,0,0.2); }
+.chat-body::-webkit-scrollbar-thumb:hover { background: var(--hot); }
 
-/* ── mensajes ── */
+/* ═══════════════════════════════
+   MENSAJES
+═══════════════════════════════ */
 .msg { display: flex; align-items: flex-end; gap: 6px; }
 .msg.user { justify-content: flex-end; }
 
 .msg-av-sm {
-  width: 26px; height: 26px;
-  background: linear-gradient(135deg, #f8a4d0, #e56baa);
+  width: 28px; height: 28px;
+  background: var(--accent);
   display: flex; align-items: center; justify-content: center;
   flex-shrink: 0;
-  border-radius: 50%;
-  border: 2px solid rgba(255,255,255,0.6);
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  border: 1.5px solid var(--ink);
+  box-shadow: 1px 1px 0 var(--ink);
   overflow: hidden;
 }
 .msg-av-sm svg {
-  width: 18px; height: 18px;
+  width: 22px; height: 22px;
 }
 
 .bubble {
   max-width: 80%;
-  padding: 6px 10px;
-  font-size: 11px;
+  padding: 7px 11px;
+  font-size: 11.5px;
   font-weight: 400;
   line-height: 1.5;
-  border-radius: 6px;
+  border: 1.5px solid var(--ink);
+  box-shadow: 2px 2px 0 var(--ink);
 }
 .bubble p + p { margin-top: 3px; }
 
+/* mensaje recibido (Barbara) — papel cremita */
 .bubble.b-in {
-  background: rgba(255,255,255,0.85);
-  border: 1px solid rgba(0,0,0,0.06);
-  color: #1a1a1a;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  background: #fff;
+  color: var(--ink);
 }
+/* mensaje enviado (yo) — naranja saturado */
 .bubble.b-out {
-  background: linear-gradient(180deg,
-    rgba(242,212,232,0.9) 0%,
-    rgba(232,192,216,0.9) 100%);
-  border: 1px solid rgba(180,100,140,0.15);
-  color: #1a1a1a;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+  background: linear-gradient(180deg, var(--orange) 0%, var(--orange-mid) 100%);
+  color: #fff;
+  text-shadow: 1px 1px 0 rgba(26,15,8,0.4);
 }
+.bubble.b-out a { color: var(--accent); }
 
-/* ── video ── */
+/* ═══════════════════════════════
+   VIDEO
+═══════════════════════════════ */
 .video-wrap { max-width: 85%; }
 .video-box {
   position: relative;
   overflow: hidden;
-  background: #000;
-  border-radius: 6px;
+  background: var(--ink);
+  border: 2px solid var(--ink);
+  box-shadow: 3px 3px 0 var(--orange-deep);
   cursor: pointer;
 }
 .video-box video {
@@ -185,56 +225,60 @@
 }
 .vid-overlay {
   position: absolute; inset: 0;
-  background: rgba(0,0,0,0.3);
+  background: rgba(26,15,8,0.4);
   display: flex; align-items: center; justify-content: center;
   transition: opacity 0.2s;
 }
 .vid-play {
-  width: 44px; height: 44px;
-  background: rgba(255,255,255,0.9);
-  border-radius: 50%;
+  width: 48px; height: 48px;
+  background: var(--accent);
+  border: 2px solid var(--ink);
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  box-shadow: 2px 2px 0 var(--orange-deep);
 }
 .vid-play::after {
   content: '';
   border-style: solid;
-  border-width: 8px 0 8px 14px;
-  border-color: transparent transparent transparent #2d6ab4;
+  border-width: 9px 0 9px 14px;
+  border-color: transparent transparent transparent var(--ink);
   margin-left: 3px;
 }
-/* botón fullscreen en la esquina del video */
+/* botón fullscreen */
 .vid-fullscreen {
   position: absolute;
   bottom: 6px; right: 6px;
   width: 28px; height: 28px;
-  background: rgba(0,0,0,0.5);
-  border: none;
-  border-radius: 4px;
+  background: var(--accent);
+  border: 1.5px solid var(--ink);
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
   opacity: 0;
   transition: opacity 0.2s;
   z-index: 2;
+  box-shadow: 1px 1px 0 var(--ink);
 }
 .video-box:hover .vid-fullscreen { opacity: 1; }
 .vid-fullscreen svg {
   width: 16px; height: 16px;
-  fill: #fff;
+  fill: var(--ink);
 }
 
-/* ── indicador de escribiendo ── */
+/* ═══════════════════════════════
+   INDICADOR "ESCRIBIENDO..."
+═══════════════════════════════ */
 .typing-wrap {
   display: flex; align-items: center; gap: 4px;
-  padding: 8px 10px;
+  padding: 8px 11px;
 }
 .t-dot {
-  width: 5px; height: 5px;
-  background: rgba(0,0,0,0.3);
-  border-radius: 50%;
+  width: 6px; height: 6px;
+  background: var(--orange-deep);
+  border: 1px solid var(--ink);
 }
 
-/* ── animaciones ── */
+/* ═══════════════════════════════
+   ANIMACIONES
+═══════════════════════════════ */
 .msg-enter { opacity: 0; transform: translateY(8px); }
 .msg-enter-active {
   opacity: 1; transform: translateY(0);
@@ -252,23 +296,22 @@
   from { opacity: 1; transform: translate(-50%, -50%) scale(1); }
   to   { opacity: 0; transform: translate(-50%, -50%) scale(0.92); }
 }
-@keyframes win-open-dragged {
-  from { opacity: 0; transform: scale(0.85); }
-  to   { opacity: 1; transform: scale(1); }
-}
 @keyframes win-close-dragged {
   from { opacity: 1; transform: scale(1); }
   to   { opacity: 0; transform: scale(0.92); }
 }
 
-/* ── responsive ── */
+/* ═══════════════════════════════
+   RESPONSIVE
+═══════════════════════════════ */
 @media (max-width: 560px) {
   .chat-frame {
     top: 0; left: 0;
     transform: none;
     width: 100%; height: 100vh;
-    border-radius: 0;
     box-shadow: none;
+    border: none;
+    border-bottom: 2px solid var(--ink);
   }
   .chat-window.open .chat-frame,
   .chat-window.closing .chat-frame,

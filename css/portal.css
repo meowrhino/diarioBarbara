@@ -1,0 +1,395 @@
+/* ═══════════════════════════════
+   PORTAL Y2K — Britney 2002, mono naranja
+   ═══════════════════════════════ */
+
+/* fuentes — Tahoma para body, mantenemos compatibilidad con chat.css */
+@font-face {
+  font-family: 'Tahoma';
+  src: url('../assets/fonts/tahoma.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Tahoma';
+  src: url('../assets/fonts/tahoma-bold.woff2') format('woff2');
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+
+/* ─── paleta ─── */
+:root {
+  --orange-deep:   #b8420c;  /* rojo quemado — bordes, headers, links */
+  --orange:        #e85a13;  /* naranja saturado — fondo de bloques */
+  --orange-mid:    #d04a0a;  /* intermedio para gradientes */
+  --orange-light:  #f7d29a;  /* cremita — fondos suaves */
+  --paper:         #fff3e0;  /* papel claro — fondo de cajas */
+  --ink:           #1a0f08;  /* texto casi negro */
+  --accent:        #ffd338;  /* amarillo brillante */
+  --hot:           #ff6b1a;  /* hot orange para hover/CTA */
+  --shadow-hard:   3px 3px 0 rgba(26,15,8,0.25);
+}
+
+/* ═══════════════════════════════
+   RESET & BASE
+═══════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+html, body {
+  min-height: 100%;
+  font-family: 'Tahoma', 'Geneva', 'Verdana', sans-serif;
+  color: var(--ink);
+  background: var(--orange);
+  /* textura granulada SVG inline — papel naranja vintage */
+  background-image:
+    /* noise sutil */
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.72  0 0 0 0 0.26  0 0 0 0 0.04  0 0 0 0.18 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>"),
+    /* gradiente cálido global */
+    radial-gradient(ellipse at 30% 0%, #f0701a 0%, var(--orange) 45%, var(--orange-deep) 100%);
+  background-attachment: fixed;
+  background-size: 180px 180px, cover;
+}
+
+/* selección de texto en tono Y2K */
+::selection { background: var(--accent); color: var(--ink); }
+
+a { color: var(--orange-deep); text-decoration: underline; }
+a:hover { color: var(--hot); }
+
+/* ═══════════════════════════════
+   PORTAL CONTAINER
+═══════════════════════════════ */
+.portal {
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 16px 16px 40px;
+  position: relative;
+}
+
+/* ─── topbar (fecha + brand minúsculo) ─── */
+.portal-topbar {
+  display: flex; align-items: center;
+  gap: 14px;
+  padding: 6px 12px;
+  background: var(--ink);
+  color: var(--orange-light);
+  font-size: 10px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  border: 1px solid var(--orange-deep);
+}
+.topbar-brand { font-weight: 700; color: #fff; }
+.topbar-tagline { flex: 1; opacity: 0.85; font-style: italic; text-transform: none; letter-spacing: 0.4px; }
+.topbar-date { color: var(--accent); font-weight: 700; }
+
+/* ═══════════════════════════════
+   HERO
+═══════════════════════════════ */
+.portal-hero {
+  background: var(--paper);
+  border: 2px solid var(--orange-deep);
+  margin-bottom: 12px;
+  position: relative;
+  overflow: hidden;
+}
+/* franja decorativa superior */
+.portal-hero::before {
+  content: '';
+  display: block;
+  height: 6px;
+  background: repeating-linear-gradient(90deg,
+    var(--orange-deep) 0 8px,
+    var(--accent) 8px 16px,
+    var(--orange) 16px 24px);
+}
+.hero-title {
+  text-align: center;
+  padding: 18px 12px 10px;
+  background:
+    radial-gradient(ellipse at center top, rgba(232,90,19,0.18), transparent 70%),
+    var(--paper);
+}
+.hero-title h1 {
+  font-family: 'Tahoma', sans-serif;
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--orange-deep);
+  text-shadow:
+    2px 2px 0 var(--accent),
+    4px 4px 0 var(--ink);
+  margin: 4px 0;
+  line-height: 1;
+}
+.hero-title-pre, .hero-title-post {
+  display: block;
+  font-size: 12px;
+  color: var(--orange);
+  letter-spacing: 4px;
+}
+
+/* ─── nav ─── */
+.portal-nav {
+  display: flex; align-items: center; justify-content: center;
+  flex-wrap: wrap;
+  background: var(--orange-deep);
+  padding: 4px 8px;
+  border-top: 1px solid var(--orange-mid);
+  gap: 0;
+}
+.portal-nav .nav-link {
+  display: inline-block;
+  padding: 6px 12px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: var(--orange-light);
+  text-decoration: none;
+  position: relative;
+}
+.portal-nav .nav-link + .nav-link::before {
+  content: '·';
+  position: absolute;
+  left: -3px; top: 50%;
+  transform: translateY(-50%);
+  color: var(--orange);
+  font-weight: 400;
+}
+.portal-nav .nav-link:hover {
+  color: var(--accent);
+  background: rgba(0,0,0,0.18);
+}
+.portal-nav .nav-arrow {
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 10px;
+  padding: 0 6px;
+}
+
+/* ═══════════════════════════════
+   GRID PRINCIPAL
+═══════════════════════════════ */
+.portal-main {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 12px;
+  align-items: start;
+}
+
+.portal-col-main, .portal-col-side {
+  display: flex; flex-direction: column; gap: 12px;
+}
+
+/* ─── modulo (caja con header) ─── */
+.portal-module {
+  background: var(--paper);
+  border: 2px solid var(--orange-deep);
+  box-shadow: var(--shadow-hard);
+  position: relative;
+}
+.module-head {
+  background: linear-gradient(180deg, var(--orange) 0%, var(--orange-mid) 100%);
+  border-bottom: 2px solid var(--orange-deep);
+  padding: 6px 12px;
+  display: flex; align-items: center;
+}
+.module-head::before {
+  content: '·:*';
+  color: var(--accent);
+  margin-right: 6px;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+.module-head::after {
+  content: '*:·';
+  color: var(--accent);
+  margin-left: auto;
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+.module-head-text {
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 3px;
+  text-shadow: 1px 1px 0 rgba(0,0,0,0.35);
+}
+.module-body {
+  padding: 12px;
+  font-size: 11px;
+  line-height: 1.55;
+  color: var(--ink);
+}
+
+/* ═══════════════════════════════
+   GRID DE CAPÍTULOS
+═══════════════════════════════ */
+.chapters-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 10px;
+  padding: 12px;
+}
+
+.chapter-card {
+  background: linear-gradient(180deg, #fff7e8 0%, var(--orange-light) 100%);
+  border: 1.5px solid var(--orange-deep);
+  padding: 10px;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  display: flex; flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+.chapter-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; height: 3px;
+  background: repeating-linear-gradient(90deg,
+    var(--accent) 0 6px,
+    var(--orange) 6px 12px);
+}
+.chapter-card:hover {
+  transform: translate(-1px, -2px);
+  box-shadow: 3px 4px 0 var(--ink);
+  background: linear-gradient(180deg, #fff 0%, #ffe1b3 100%);
+}
+.chapter-card:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+
+.chapter-card-head {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--orange-deep);
+  font-weight: 700;
+  margin-bottom: 6px;
+  padding-bottom: 4px;
+  border-bottom: 1px dashed var(--orange);
+}
+
+.chapter-card-icon {
+  width: 64px; height: 64px;
+  margin: 0 auto 6px;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--paper);
+  border: 1px solid var(--orange);
+}
+.chapter-card-icon img {
+  width: 48px; height: 48px;
+  image-rendering: pixelated;
+  filter: drop-shadow(1px 1px 0 rgba(0,0,0,0.25));
+}
+.chapter-card-icon .emoji-fallback {
+  font-size: 36px;
+  line-height: 1;
+}
+
+.chapter-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--orange-deep);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  text-align: center;
+  margin-bottom: 4px;
+  line-height: 1.15;
+}
+.chapter-card-preview {
+  font-size: 10px;
+  color: var(--ink);
+  line-height: 1.4;
+  margin-bottom: 8px;
+  flex: 1;
+  font-style: italic;
+  opacity: 0.85;
+}
+.chapter-card-cta {
+  align-self: center;
+  background: var(--orange-deep);
+  color: var(--orange-light);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border: 1px solid var(--ink);
+  margin-top: auto;
+}
+.chapter-card:hover .chapter-card-cta {
+  background: var(--hot);
+  color: var(--accent);
+}
+
+/* ═══════════════════════════════
+   BREAKING NEWS
+═══════════════════════════════ */
+.breaking-news p {
+  margin-bottom: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px dotted var(--orange);
+}
+.breaking-news p:last-child { border-bottom: none; }
+.breaking-news b { color: var(--orange-deep); }
+
+/* ═══════════════════════════════
+   SIDEBAR
+═══════════════════════════════ */
+.side-list { display: flex; flex-direction: column; }
+.side-list a {
+  padding: 6px 4px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--orange-deep);
+  text-decoration: none;
+  border-bottom: 1px dotted var(--orange);
+}
+.side-list a:hover {
+  background: var(--accent);
+  color: var(--ink);
+  padding-left: 8px;
+}
+.side-list a:last-child { border-bottom: none; }
+
+.side-block { font-size: 11px; }
+.side-block p { margin-bottom: 4px; }
+
+/* ═══════════════════════════════
+   FOOTER
+═══════════════════════════════ */
+.portal-footer {
+  margin-top: 18px;
+  padding: 12px 8px;
+  text-align: center;
+  font-size: 9px;
+  color: var(--orange-light);
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  border-top: 1px solid var(--orange-deep);
+}
+.portal-footer .footer-small {
+  margin-top: 6px;
+  opacity: 0.7;
+  text-transform: none;
+  font-style: italic;
+  letter-spacing: 0.3px;
+}
+
+/* ═══════════════════════════════
+   RESPONSIVE
+═══════════════════════════════ */
+@media (max-width: 720px) {
+  .portal-main { grid-template-columns: 1fr; }
+  .hero-title h1 { font-size: 28px; letter-spacing: 4px; }
+  .portal-topbar { flex-direction: column; gap: 4px; align-items: flex-start; }
+  .portal-nav .nav-link { padding: 5px 8px; font-size: 10px; letter-spacing: 1px; }
+}
+@media (max-width: 480px) {
+  .chapters-grid { grid-template-columns: 1fr 1fr; }
+  .portal { padding: 8px 8px 30px; }
+}

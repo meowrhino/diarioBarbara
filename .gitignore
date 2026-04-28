@@ -1,3 +1,5 @@
 .DS_Store
 .vscode/
 pruebas/
+referencias/
+.claude/settings.local.json

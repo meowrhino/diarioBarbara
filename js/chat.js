@@ -48,7 +48,6 @@ fetch('data.json')
     chatData = data;
     await iconIndexReady;
     renderDesktop(data.chats);
-    if (data.chats.length > 0) openChat(data.chats.length - 1);
   });
 
 /* ── abrir un chat ── */
@@ -114,7 +113,7 @@ document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeChat(
    Renderizar mensajes
 ═══════════════════════════════ */
 const FULLSCREEN_SVG = `<svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>`;
-const AVATAR_SVG = `<svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="16" fill="#f8a4d0"/><circle cx="11" cy="14" r="2.2" fill="#3a2a2a"/><circle cx="21" cy="14" r="2.2" fill="#3a2a2a"/><ellipse cx="11" cy="13.2" rx="1" ry="0.5" fill="#fff" opacity="0.7"/><ellipse cx="21" cy="13.2" rx="1" ry="0.5" fill="#fff" opacity="0.7"/><path d="M12 20.5 Q16 24 20 20.5" stroke="#e05a7a" stroke-width="1.5" fill="none" stroke-linecap="round"/><circle cx="7" cy="18" r="2.5" fill="#f48fb1" opacity="0.4"/><circle cx="25" cy="18" r="2.5" fill="#f48fb1" opacity="0.4"/></svg>`;
+const AVATAR_SVG = `<svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="16" fill="#ffd338"/><circle cx="11" cy="14" r="2.2" fill="#1a0f08"/><circle cx="21" cy="14" r="2.2" fill="#1a0f08"/><ellipse cx="11" cy="13.2" rx="1" ry="0.5" fill="#fff" opacity="0.85"/><ellipse cx="21" cy="13.2" rx="1" ry="0.5" fill="#fff" opacity="0.85"/><path d="M12 20.5 Q16 24 20 20.5" stroke="#b8420c" stroke-width="1.6" fill="none" stroke-linecap="round"/><circle cx="7" cy="18" r="2.5" fill="#e85a13" opacity="0.55"/><circle cx="25" cy="18" r="2.5" fill="#e85a13" opacity="0.55"/></svg>`;
 
 function renderMessage(msg) {
   const isVideo = typeof msg.contenido === 'string' && /\.(webm|mp4)$/i.test(msg.contenido);
