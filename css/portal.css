@@ -278,15 +278,6 @@ a:hover { color: var(--hot); }
   margin-bottom: 4px;
   line-height: 1.15;
 }
-.chapter-card-preview {
-  font-size: 10px;
-  color: var(--ink);
-  line-height: 1.4;
-  margin-bottom: 8px;
-  flex: 1;
-  font-style: italic;
-  opacity: 0.85;
-}
 .chapter-card-cta {
   align-self: center;
   background: var(--orange-deep);

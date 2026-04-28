@@ -55,7 +55,6 @@ function renderDesktop(chats) {
 
     const epNum = String(idx + 1).padStart(2, '0');
     const fecha = formatDateY2K(chat.fecha || '');
-    const preview = firstTextPreview(chat.chat);
 
     el.innerHTML = `
       <div class="chapter-card-head">
@@ -64,7 +63,6 @@ function renderDesktop(chats) {
       </div>
       <div class="chapter-card-icon">${iconHtml}</div>
       <div class="chapter-card-title">${chat.titulo}</div>
-      <div class="chapter-card-preview">"${preview}"</div>
       <div class="chapter-card-cta">entrar ›</div>
     `;
     el.addEventListener('click', () => openChat(idx));

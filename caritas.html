@@ -100,19 +100,27 @@
     <a class="back" href="index.html">‹ volver al portal</a>
   </div>
 
-  <script src="js/caritas.js"></script>
+  <!-- Loader con cache-busting -->
   <script>
-    /* render del set leyendo de js/caritas.js */
-    const grid = document.getElementById('grid');
-    Object.entries(CARITAS).forEach(([key, svg], i) => {
-      const item = document.createElement('div');
-      item.className = 'item';
-      item.innerHTML = `
-        <div class="num">${String(i + 1).padStart(2, '0')}</div>
-        <div class="face-box">${svg}</div>
-        <div class="key">${key}</div>`;
-      grid.appendChild(item);
-    });
+    (async () => {
+      await new Promise((res, rej) => {
+        const s = document.createElement('script');
+        s.src = 'js/caritas.js?t=' + Date.now();
+        s.onload = res;
+        s.onerror = rej;
+        document.body.appendChild(s);
+      });
+      const grid = document.getElementById('grid');
+      Object.entries(CARITAS).forEach(([key, svg], i) => {
+        const item = document.createElement('div');
+        item.className = 'item';
+        item.innerHTML = `
+          <div class="num">${String(i + 1).padStart(2, '0')}</div>
+          <div class="face-box">${svg}</div>
+          <div class="key">${key}</div>`;
+        grid.appendChild(item);
+      });
+    })();
   </script>
 
 </body>

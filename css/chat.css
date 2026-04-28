@@ -202,15 +202,20 @@
 }
 .bubble.b-out a { color: var(--accent); }
 
-/* ── caritas inline en mensajes (parseInlineCaritas) ── */
+/* ── caritas inline en mensajes (parseInlineCaritas) ──
+   Mismo marco amarillo cuadrado con borde negro que las cards del portal */
 .inline-carita {
   display: inline-flex;
+  align-items: center; justify-content: center;
   vertical-align: -4px;
   width: 18px; height: 18px;
-  margin: 0 1px;
+  background: var(--accent);
+  border: 1px solid var(--ink);
+  box-shadow: 1px 1px 0 var(--ink);
+  margin: 0 2px;
 }
 .inline-carita svg {
-  width: 100%; height: 100%;
+  width: 90%; height: 90%;
   display: block;
 }
 

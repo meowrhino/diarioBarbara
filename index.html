@@ -123,8 +123,21 @@
     </div>
   </div>
 
-  <script src="js/caritas.js"></script>
-  <script src="js/portal.js"></script>
-  <script src="js/chat.js"></script>
+  <!-- Loader con cache-busting timestamp para evitar caché del navegador en JS -->
+  <script>
+    (async () => {
+      const t = Date.now();
+      const srcs = ['js/caritas.js', 'js/portal.js', 'js/chat.js'];
+      for (const src of srcs) {
+        await new Promise((res, rej) => {
+          const s = document.createElement('script');
+          s.src = src + '?t=' + t;
+          s.onload = res;
+          s.onerror = rej;
+          document.body.appendChild(s);
+        });
+      }
+    })();
+  </script>
 </body>
 </html>

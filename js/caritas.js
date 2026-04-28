@@ -58,9 +58,10 @@ const CARITAS = {
   traviesa: `<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg"><circle cx="16" cy="16" r="16" fill="#ffd338"/><path d="M7 10 Q11 8.5 14 11" stroke="#1a0f08" stroke-width="1.6" fill="none" stroke-linecap="round"/><line x1="18" y1="11" x2="24.5" y2="11" stroke="#1a0f08" stroke-width="1.6" stroke-linecap="round"/><circle cx="11" cy="14.5" r="1.8" fill="#1a0f08"/><circle cx="21" cy="14.5" r="1.8" fill="#1a0f08"/><path d="M11 21 Q14 23.5 18 22 Q19.5 21 21 21.5" stroke="#b8420c" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>`
 };
 
-/* ── Reemplaza :tags: en un string por la carita inline correspondiente ── */
+/* ── Reemplaza :tags: en un string por la carita inline correspondiente ──
+   El regex acepta a-z + ñ (para keys como "risueña") */
 function parseInlineCaritas(text) {
-  return text.replace(/:([a-z]+):/g, (match, key) => {
+  return text.replace(/:([a-zñ]+):/g, (match, key) => {
     if (CARITAS[key]) {
       return `<span class="inline-carita">${CARITAS[key]}</span>`;
     }
