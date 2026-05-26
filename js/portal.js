@@ -34,7 +34,7 @@ function firstTextPreview(chat) {
 }
 
 /* ── formatear fecha estilo Y2K (MAR 15 · 26) ── */
-const MESES = ['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+const MESES = ['ene','feb','mar','abr','may','jun','jul','ago','sep','oct','nov','dic'];
 function formatDateY2K(iso) {
   const d = new Date(iso);
   if (isNaN(d)) return iso;
